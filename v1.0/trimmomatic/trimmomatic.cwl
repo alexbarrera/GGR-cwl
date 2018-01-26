@@ -59,7 +59,7 @@
         <length>
         This module removes reads that fall below the specified minimal length. If required, it should
         normally be after all other processing steps. Reads removed by this step will be counted and
-        included in the „dropped reads‟ count presented in the trimmomatic summary.
+        included in the "dropped reads" count presented in the trimmomatic summary.
         <length>:  Specifies the minimum length of reads to be kept
     input_read2_fastq_file:
       type: File?
@@ -124,7 +124,7 @@
         <keepBothReads>: After read-though has been detected by palindrome mode, and the
         adapter sequence removed, the reverse read contains the same sequence information as the
         forward read, albeit in reverse complement. For this reason, the default behaviour is to
-        entirely drop the reverse read. By specifying „true‟ for this parameter, the reverse read will
+        entirely drop the reverse read. By specifying "true" for this parameter, the reverse read will
         also be retained, which may be useful e.g. if the downstream tools cannot handle a
         combination of paired and unpaired reads.
     crop:
@@ -185,9 +185,9 @@
       doc: |
         <quality>
         Remove low quality bases from the end. As long as a base has a value below this threshold
-        the base is removed and the next base (which as trimmomatic is starting from the 3‟ prime end
+        the base is removed and the next base (which as trimmomatic is starting from the 3" prime end
         would be base preceding the just removed base) will be investigated. This approach can be
-        used removing the special illumina „low quality segment‟ regions (which are marked with
+        used removing the special illumina "low quality segment" regions (which are marked with
         quality score of 2), but we recommend Sliding Window or MaxInfo instead
         <quality>: Specifies the minimum quality required to keep a base.
     maxinfo:
