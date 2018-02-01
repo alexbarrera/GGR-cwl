@@ -22,6 +22,6 @@
         glob: $(inputs.peaks.path.replace(/^.*[\\\/]/, '').replace(/\.([^/.]+)$/, "\.trunked_scores\.$1"))
  baseCommand: awk
  arguments:
-  - valueFrom: BEGIN{OFS=FS}\$5>1000{\$5=1000}{print}
+  - valueFrom: BEGIN{OFS=FS}$5>1000{$5=1000}{print}
     position: 3
  stdout: $(inputs.peaks.path.replace(/^.*[\\\/]/, '').replace(/\.([^/.]+)$/, "\.trunked_scores\.$1"))
