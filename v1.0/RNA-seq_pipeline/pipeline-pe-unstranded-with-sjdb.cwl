@@ -87,7 +87,6 @@
       out:
       - star_aligned_unsorted_file
       - star_aligned_sorted_file
-      - star_aligned_sorted_index_file
       - star2_stat_files
       - star2_readspergene_file
       - read_count_mapped_star2
@@ -161,10 +160,6 @@
       doc: PCR Bottleneck Coefficient
       type: File[]
       outputSource: map/pcr_bottleneck_coef_file
-    star_aligned_sorted_index_file:
-      doc: STAR mapped unsorted file.
-      type: File[]
-      outputSource: map/star_aligned_sorted_index_file
     read_count_mapped_star2:
       doc: Read counts of the mapped BAM files after STAR pass2
       type: File[]

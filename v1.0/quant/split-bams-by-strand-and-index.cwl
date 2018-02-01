@@ -21,19 +21,19 @@
         input_file: split-bam-plus/output_file
       scatter: input_file
       out:
-      - index_file
+      - indexed_file
     index_minus_bam:
       run: ../map/samtools-index.cwl
       in:
         input_file: split-bam-minus/output_file
       scatter: input_file
       out:
-      - index_file
+      - indexed_file
     split-bam-plus:
       run: ../quant/bamtools-filter.cwl
       in:
         in:
-          source: input_bam_files
+          source: index_plus_bam/indexed_file
           valueFrom: ${return [self]}
         out:
           source: input_basenames
@@ -53,7 +53,7 @@
           source: input_basenames
           valueFrom: $(self + ".Aligned.minus.bam")
         in:
-          source: input_bam_files
+          source: index_minus_bam/indexed_file
           valueFrom: ${return [self]}
       scatterMethod: dotproduct
       scatter:

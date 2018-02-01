@@ -40,7 +40,6 @@
       run: 01-map-se.cwl
       out:
       - output_data_filtered_bam_files
-      - output_index_filtered_bam_files
       - output_pbc_files
       - output_bowtie_log
       - output_preseq_c_curve_files
@@ -123,10 +122,6 @@
       doc: Bowtie log file with mapping stats
       type: File[]
       outputSource: map/output_bowtie_log
-    map_dedup_bam_index_files:
-      doc: Filtered BAM index files
-      type: File[]
-      outputSource: map/output_index_filtered_bam_files
     map_pbc_files:
       doc: PCR Bottleneck Coefficient files (used to flag samples when pbc<0.5)
       type: File[]

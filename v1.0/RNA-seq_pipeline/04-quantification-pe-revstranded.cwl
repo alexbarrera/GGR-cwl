@@ -52,16 +52,16 @@
       run: ../quant/subread-featurecounts.cwl
       in:
         B:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g:
           valueFrom: gene_id
         output_filename:
           source: basename/basename
           valueFrom: $(self + ".featurecounts.counts.txt")
         p:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         s:
-          valueFrom: $(2)
+          valueFrom: ${return 2}
         t:
           valueFrom: exon
         annotation_file: annotation_file
@@ -120,13 +120,13 @@
       run: ../quant/deeptools-bamcoverage.cwl
       in:
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         numberOfProcessors: nthreads
         bam: split_bams/bam_minus_files
         output_suffix:
           valueFrom: .norm-minus-pre-negated-bw
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatter: bam
       out:
       - output_bam_coverage
@@ -164,7 +164,7 @@
       run: ../map/bedtools-genomecov.cwl
       in:
         bg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: input_genome_sizes
         ibam: split_bams/bam_plus_files
       scatter: ibam
@@ -174,13 +174,13 @@
       run: ../quant/deeptools-bamcoverage.cwl
       in:
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         numberOfProcessors: nthreads
         bam: split_bams/bam_plus_files
         output_suffix:
           valueFrom: .norm.bw
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatter: bam
       out:
       - output_bam_coverage
@@ -188,17 +188,17 @@
       run: ../quant/rsem-calculate-expression.cwl
       in:
         paired-end:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         reference_name:
           source: rsem_reference_files
           valueFrom: "${\n  var trans_file_str = self.map(function(e){return e.path}).filter(function(e){return e.match(/\\.transcripts\\.fa$/)})[0];\n  return trans_file_str.match(/.*[\\\\\\/](.*)\\.transcripts\\.fa$/)[1];\n}"
         reference_files: rsem_reference_files
         no-bam-output:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         quiet:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         seed:
-          valueFrom: $(1234)
+          valueFrom: ${return 1234}
         sample_name:
           source: basename/basename
           valueFrom: $(self + ".rsem")
@@ -226,7 +226,7 @@
       run: ../map/bedtools-genomecov.cwl
       in:
         bg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: input_genome_sizes
         ibam: split_bams/bam_minus_files
       scatter: ibam

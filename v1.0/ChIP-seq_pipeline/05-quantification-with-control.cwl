@@ -23,11 +23,11 @@
         outFileFormat:
           valueFrom: bigwig
         extendReads:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 100000}
         bam: input_trt_bam_files
         output_suffix:
           valueFrom: .rpkm.bw
@@ -43,7 +43,7 @@
         bigwig1: bamCoverage-rpkm-trt/output_bam_coverage
         bigwig2: bamCoverage-rpkm-ctrl/output_bam_coverage
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 100000}
         outFileFormat:
           valueFrom: bigwig
         output_suffix:
@@ -68,11 +68,11 @@
         outFileFormat:
           valueFrom: bigwig
         extendReads:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 100000}
         bam: input_ctrl_bam_files
         output_suffix:
           valueFrom: .rpkm.bw
@@ -93,7 +93,7 @@
       run: ../map/bedtools-genomecov.cwl
       in:
         bg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: input_genome_sizes
         ibam: input_trt_bam_files
       scatter: ibam

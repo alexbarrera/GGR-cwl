@@ -46,7 +46,7 @@
         input_bam: input_bam_files
         nthreads: nthreads
         savp:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatterMethod: dotproduct
       scatter:
       - input_bam
@@ -96,7 +96,7 @@
       in:
         extsize: extract-peak-frag-length/output_best_frag_length
         nomodel:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         treatment:
           source: input_bam_files
           valueFrom: $([self])

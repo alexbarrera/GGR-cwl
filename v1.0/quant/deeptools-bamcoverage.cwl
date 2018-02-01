@@ -326,7 +326,7 @@
         be multiplied by the given scale factor. (default:
         1.0)
     skipNonCoveredRegions:
-      type: string?
+      type: boolean?
       inputBinding:
         position: 1
         prefix: --skipNonCoveredRegions
@@ -424,7 +424,8 @@
         (default: None)
     bam:
       type: File
-      secondaryFiles: $(self.path + '.bai')
+      secondaryFiles:
+        - .bai
       inputBinding:
         position: 1
         prefix: --bam

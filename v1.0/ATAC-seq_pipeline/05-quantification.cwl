@@ -76,7 +76,7 @@
       run: ../map/bedtools-genomecov.cwl
       in:
         bg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: input_genome_sizes
         ibam: input_bam_files
       scatter: ibam
@@ -87,11 +87,11 @@
       in:
         numberOfProcessors: nthreads
         extendReads:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         binSize:
-          valueFrom: $(50)
+          valueFrom: ${return 50}
         bam: input_bam_files
         output_suffix:
           valueFrom: .norm.bw
@@ -121,7 +121,7 @@
       in:
         i: input_pileup_bedgraphs
         b:
-          valueFrom: $(0)
+          valueFrom: ${return 0}
         g: input_genome_sizes
       scatter: i
       out:

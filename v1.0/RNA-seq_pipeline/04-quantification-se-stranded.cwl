@@ -27,16 +27,16 @@
       run: ../quant/subread-featurecounts.cwl
       in:
         B:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g:
           valueFrom: gene_id
         output_filename:
           source: basename/basename
           valueFrom: $(self + ".featurecounts.counts.txt")
         p:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         s:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         t:
           valueFrom: exon
         annotation_file: annotation_file
@@ -82,7 +82,7 @@
       run: ../map/bedtools-genomecov.cwl
       in:
         bg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: input_genome_sizes
         ibam: input_bam_files
       scatter: ibam
@@ -92,13 +92,13 @@
       run: ../quant/deeptools-bamcoverage.cwl
       in:
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         numberOfProcessors: nthreads
         bam: input_bam_files
         output_suffix:
           valueFrom: .norm.bw
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatter: bam
       out:
       - output_bam_coverage
@@ -110,17 +110,17 @@
           valueFrom: "${\n  var trans_file_str = self.map(function(e){return e.path}).filter(function(e){return e.match(/\\.transcripts\\.fa$/)})[0];\n  return trans_file_str.match(/.*[\\\\\\/](.*)\\.transcripts\\.fa$/)[1];\n}"
         reference_files: rsem_reference_files
         no-bam-output:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         quiet:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         seed:
-          valueFrom: $(1234)
+          valueFrom: ${return 1234}
         sample_name:
           source: basename/basename
           valueFrom: $(self + ".rsem")
         bam: input_transcripts_bam_files
         strand-specific:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         num-threads: nthreads
       scatterMethod: dotproduct
       scatter:

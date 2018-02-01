@@ -78,7 +78,6 @@
       run: 03-map-pe.cwl
       out:
       - output_data_sorted_dedup_bam_files
-      - output_index_dedup_bam_files
       - output_picard_mark_duplicates_files
       - output_pbc_files
       - output_bowtie_log
@@ -197,7 +196,6 @@
       run: 03-map-pe.cwl
       out:
       - output_data_sorted_dedup_bam_files
-      - output_index_dedup_bam_files
       - output_picard_mark_duplicates_files
       - output_pbc_files
       - output_bowtie_log
@@ -281,10 +279,6 @@
       doc: Peak calling report file
       type: File[]
       outputSource: peak_call/output_peak_xls_file
-    map_control_dedup_bam_index_files:
-      doc: Filtered BAM index files for control
-      type: File[]
-      outputSource: map_control/output_index_dedup_bam_files
     trimm_control_fastq_files_read2:
       doc: FASTQ files after trimming step for control
       type: File[]
@@ -350,10 +344,6 @@
       doc: Raw read counts for R1 of fastq files after TRIMM for treatment
       type: File[]
       outputSource: trimm_treatment/output_trimmed_read1_fastq_read_count
-    map_treatment_dedup_bam_index_files:
-      doc: Filtered BAM index files for treatment
-      type: File[]
-      outputSource: map_treatment/output_index_dedup_bam_files
     peak_call_filtered_read_count_file:
       doc: Filtered read count after peak calling
       type: File[]

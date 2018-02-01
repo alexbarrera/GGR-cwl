@@ -35,7 +35,7 @@
       run: ../map/bedtools-genomecov.cwl
       in:
         bg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: input_genome_sizes
         ibam: input_bam_files
       scatter: ibam
@@ -48,11 +48,11 @@
         outFileFormat:
           valueFrom: bigwig
         extendReads:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         normalizeUsingRPKM:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         binSize:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         bam: input_bam_files
         output_suffix:
           valueFrom: .rpkm.bw

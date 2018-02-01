@@ -72,7 +72,6 @@
       run: 03-map-pe-blacklist-removal.cwl
       out:
       - output_data_sorted_dedup_bam_files
-      - output_index_dedup_bam_files
       - output_picard_mark_duplicates_files
       - output_pbc_files
       - output_bowtie_log
@@ -291,10 +290,6 @@
       doc: Extended fragment peaks in ENCODE Peak file format
       type: File[]
       outputSource: peak_call/output_extended_peak_file
-    map_dedup_bam_index_files:
-      doc: Filtered BAM index files
-      type: File[]
-      outputSource: map/output_index_dedup_bam_files
     peak_call_read_in_peak_count_within_replicate:
       doc: Peak counts within replicate
       type: File[]

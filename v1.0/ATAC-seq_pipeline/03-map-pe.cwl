@@ -46,9 +46,9 @@
         output_filename: extract_basename_2/output_path
         input_fastq_read2_file: input_fastq_read2_files
         v:
-          valueFrom: $(2)
+          valueFrom: ${return 2}
         X:
-          valueFrom: $(2000)
+          valueFrom: ${return 2000}
         genome_ref_first_index_file: genome_ref_first_index_file
         nthreads: nthreads
       scatterMethod: dotproduct
@@ -100,7 +100,7 @@
       scatter:
       - input_file
       out:
-      - index_file
+      - indexed_file
     mapped_filtered_reads_count:
       run: ../peak_calling/samtools-extract-number-mapped-reads.cwl
       in:
@@ -193,14 +193,10 @@
       doc: Read counts of the mapped BAM files
       type: File[]
       outputSource: mapped_reads_count/output
-    output_index_dedup_bam_files:
-      doc: Index for BAM files without duplicate reads.
-      type: File[]
-      outputSource: index_dedup_bams/index_file
     output_data_sorted_dedup_bam_files:
       doc: BAM files without duplicate reads.
       type: File[]
-      outputSource: sort_dedup_bams/sorted_file
+      outputSource: index_dedup_bams/indexed_file
     output_picard_mark_duplicates_files:
       doc: Picard MarkDuplicates metrics files.
       type: File[]

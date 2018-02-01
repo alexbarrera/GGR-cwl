@@ -19,11 +19,11 @@
       run: ../peak_calling/macs2-callpeak.cwl
       in:
         extsize:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         bdg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         nomodel:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         format: input_bam_format
         shift:
           valueFrom: $(-100)
@@ -51,7 +51,7 @@
         input_bam: input_bam_files
         nthreads: nthreads
         savp:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatterMethod: dotproduct
       scatter:
       - input_bam

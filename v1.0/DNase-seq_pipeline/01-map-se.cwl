@@ -113,7 +113,7 @@
       scatter:
       - input_file
       out:
-      - index_file
+      - indexed_file
     sam2bam:
       run: ../map/samtools2bam.cwl
       in:
@@ -169,12 +169,12 @@
       in:
         nthreads: nthreads
         seedmms:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         output_filename: extract_basename/output_basename
         seedlen:
-          valueFrom: $(20)
+          valueFrom: ${return 20}
         trim3:
-          valueFrom: $(30)
+          valueFrom: ${return 30}
         genome_ref_first_index_file: genome_ref_first_index_file
         input_fastq_file: input_fastq_files
       scatterMethod: dotproduct
@@ -188,7 +188,7 @@
     output_data_filtered_bam_files:
       doc: BAM files without PCR artifact reads.
       type: File[]
-      outputSource: sort_filtered_bam/sorted_file
+      outputSource: index_filtered_bam/indexed_file
     output_pbc_files:
       doc: PCR Bottleneck Coeficient files.
       type: File[]
@@ -201,10 +201,6 @@
       doc: Read counts of the mapped and filtered BAM files
       type: File[]
       outputSource: mapped_filtered_reads_count/output_read_count
-    output_index_filtered_bam_files:
-      doc: Index for BAM files without PCR artifact reads.
-      type: File[]
-      outputSource: index_filtered_bam/index_file
     output_preseq_c_curve_files:
       doc: Preseq c_curve output files.
       type: File[]

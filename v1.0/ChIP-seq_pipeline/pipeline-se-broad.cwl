@@ -67,7 +67,6 @@
       run: 03-map-se.cwl
       out:
       - output_data_sorted_dedup_bam_files
-      - output_index_dedup_bam_files
       - output_picard_mark_duplicates_files
       - output_pbc_files
       - output_bowtie_log
@@ -224,7 +223,3 @@
       doc: FastQC data files
       type: File[]
       outputSource: qc/output_fastqc_data_files
-    map_dedup_bam_index_files:
-      doc: Filtered BAM index files
-      type: File[]
-      outputSource: map/output_index_dedup_bam_files

@@ -87,10 +87,10 @@
           valueFrom: '33'
         nthreads: nthreads
         minlen:
-          valueFrom: $(15)
+          valueFrom: ${return 15}
         input_read2_fastq_file: input_fastq_read2_files
         leading:
-          valueFrom: $(3)
+          valueFrom: ${return 3}
         slidingwindow:
           valueFrom: 4:20
         illuminaclip:
@@ -100,7 +100,7 @@
         java_opts: trimmomatic_java_opts
         input_adapters_file: concat_adapters/output_file
         trailing:
-          valueFrom: $(3)
+          valueFrom: ${return 3}
         trimmomatic_jar_path: trimmomatic_jar_path
         input_read1_fastq_file: input_fastq_read1_files
       scatterMethod: dotproduct

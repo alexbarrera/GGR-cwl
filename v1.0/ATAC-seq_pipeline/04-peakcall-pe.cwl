@@ -55,7 +55,7 @@
       run: ../map/samtools-sort.cwl
       in:
         n:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         nthreads: nthreads
         input_file: input_bam_files
       scatter:
@@ -75,7 +75,7 @@
         input_bam: input_bam_files
         nthreads: nthreads
         savp:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatterMethod: dotproduct
       scatter:
       - input_bam
@@ -132,7 +132,7 @@
       in:
         bam: sort-bam-by-name/sorted_file
         bedpe:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatter: bam
       out:
       - output_bedfile
@@ -167,18 +167,18 @@
       run: ../peak_calling/macs2-callpeak.cwl
       in:
         extsize:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         bdg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         nomodel:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: genome_effective_size
         format:
           valueFrom: BED
         shift:
-          valueFrom: $(-100)
+          valueFrom: ${return -100}
         q:
-          valueFrom: $(0.1)
+          valueFrom: ${return 0.1}
         treatment:
           source: unpair_bedpe/bed
           valueFrom: $([self])
@@ -194,9 +194,9 @@
       run: ../peak_calling/macs2-callpeak.cwl
       in:
         q:
-          valueFrom: $(0.1)
+          valueFrom: ${return 0.1}
         bdg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         treatment:
           source: input_bam_files
           valueFrom: $([self])

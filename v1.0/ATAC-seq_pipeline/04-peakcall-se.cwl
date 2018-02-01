@@ -46,7 +46,7 @@
         input_bam: input_bam_files
         nthreads: nthreads
         savp:
-          valueFrom: $(true)
+          valueFrom: ${return true}
       scatterMethod: dotproduct
       scatter:
       - input_bam
@@ -95,17 +95,17 @@
       run: ../peak_calling/macs2-callpeak.cwl
       in:
         extsize:
-          valueFrom: $(200)
+          valueFrom: ${return 200}
         bdg:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         nomodel:
-          valueFrom: $(true)
+          valueFrom: ${return true}
         g: genome_effective_size
         format: input_bam_format
         shift:
-          valueFrom: $(-100)
+          valueFrom: ${return -100}
         q:
-          valueFrom: $(0.1)
+          valueFrom: ${return 0.1}
         treatment:
           source: input_bam_files
           valueFrom: $([self])

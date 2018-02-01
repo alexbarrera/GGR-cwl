@@ -34,12 +34,12 @@
       run: ../workflows/tools/STAR.cwl
       in:
         alignSJoverhangMin:
-          valueFrom: $(8)
+          valueFrom: ${return 8}
         genomeDir: genomeDirFiles
         outFilterType:
           valueFrom: BySJout
         alignSJDBoverhangMin:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         outFilterIntronMotifs:
           valueFrom: RemoveNoncanonical
         outSAMattributes:
@@ -47,20 +47,20 @@
         outSAMunmapped:
           valueFrom: Within
         outFilterMultimapNmax:
-          valueFrom: $(20)
+          valueFrom: ${return 20}
         alignIntronMax:
-          valueFrom: $(1000000)
+          valueFrom: ${return 1000000}
         outFilterMismatchNoverReadLmax:
           valueFrom: $(0.04)
         outFilterMismatchNmax:
-          valueFrom: $(999)
+          valueFrom: ${return 999}
         alignIntronMin:
-          valueFrom: $(20)
+          valueFrom: ${return 20}
         runThreadN: nthreads
         alignMatesGapMax:
-          valueFrom: $(1000000)
+          valueFrom: ${return 1000000}
         sjdbScore:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         readFilesIn:
           source: input_fastq_read1_files
           valueFrom: $([self])
@@ -88,7 +88,7 @@
         outSAMattributes:
           valueFrom: All
         outFilterMultimapNmax:
-          valueFrom: $(1)
+          valueFrom: ${return 1}
         outFileNamePrefix:
           source: basename/basename
           valueFrom: $(self + ".star2.")
@@ -137,7 +137,7 @@
       scatter:
       - input_file
       out:
-      - index_file
+      - indexed_file
     preseq-c-curve:
       run: ../map/preseq-c_curve.cwl
       in:
@@ -191,10 +191,6 @@
       doc: PCR Bottleneck Coefficient
       type: File[]
       outputSource: execute_pcr_bottleneck_coef/pbc_file
-    star_aligned_sorted_index_file:
-      doc: STAR mapped unsorted file.
-      type: File[]
-      outputSource: index_star_pass2_bam/index_file
     read_count_mapped_star2:
       doc: Read counts of the mapped BAM files after STAR pass2
       type: File[]
@@ -211,7 +207,7 @@
     star_aligned_sorted_file:
       doc: STAR mapped unsorted file.
       type: File[]
-      outputSource: sort_star_pass2_bam/sorted_file
+      outputSource: index_star_pass2_bam/indexed_file
     transcriptome_star_stat_files:
       doc: STAR pass-2 aligned to transcriptome stat files.
       type:
