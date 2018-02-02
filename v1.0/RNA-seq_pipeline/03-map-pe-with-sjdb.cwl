@@ -34,7 +34,7 @@
       type: string
  steps:
     transcriptome_star_pass2:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         alignSJoverhangMin:
           valueFrom: ${return 8}
@@ -81,7 +81,7 @@
       - transcriptomesam
       - mappingstats
     star_pass2:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         genomeDir: genomeDirFiles
         outFilterIntronMotifs:

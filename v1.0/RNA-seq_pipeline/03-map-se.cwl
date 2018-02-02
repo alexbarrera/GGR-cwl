@@ -34,7 +34,7 @@
       type: string
  steps:
     transcriptome_star_pass2:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         alignSJoverhangMin:
           valueFrom: ${return 8}
@@ -94,7 +94,7 @@
       out:
       - output_file
     star_pass1:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         genomeDir: genomeDirFiles
         outSAMattributes:
@@ -127,7 +127,7 @@
       out:
       - sorted_file
     star_pass2:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         genomeDir: generate_genome/indices
         outFilterIntronMotifs:
@@ -243,7 +243,7 @@
         sjdbOverhang:
           source: sjdbOverhang
           valueFrom: $(parseInt(self))
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       out:
       - indices
     execute_pcr_bottleneck_coef:

@@ -37,7 +37,7 @@
       type: string
  steps:
     transcriptome_star_pass2:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         alignSJoverhangMin:
           valueFrom: ${return 8}
@@ -126,11 +126,11 @@
         sjdbOverhang:
           source: sjdbOverhang
           valueFrom: $(parseInt(self))
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       out:
       - indices
     star_pass2:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         genomeDir: generate_genome/indices
         outFilterIntronMotifs:
@@ -180,7 +180,7 @@
       out:
       - basename
     star_pass1:
-      run: ../workflows/tools/STAR.cwl
+      run: ../../workflows/tools/STAR.cwl
       in:
         genomeDir: genomeDirFiles
         outSAMattributes:
