@@ -39,7 +39,7 @@
     mean estimates will be calculated in addition to maximum likelihood
     estimates.
  requirements:
-    InlineJavascriptRequirement: {}
+ - class: InlineJavascriptRequirement
  hints:
     DockerRequirement:
       dockerPull: reddylab/rsem:1.2.25
@@ -283,7 +283,7 @@
       type: string
       inputBinding:
         position: 4
-        valueFrom: $(inputs.reference_files[0].path.replace(/[^\\\/]*$/, "") + self)
+        valueFrom: $(inputs.reference_files.path + "/" + self)
       doc: |
         The name of the reference used. The user must have run
         'rsem-prepare-reference' with this reference_name before running
@@ -456,9 +456,9 @@
         Run RSEM's collapsed Gibbs sampler to calculate posterior mean
         estimates. (Default: off)
     reference_files:
-      type: File[]
+      type: Directory
       doc: |
-        <reference_name>.seq, <reference_name>.transcripts.fa, ...
+        Directory containing <reference_name>.seq, <reference_name>.transcripts.fa, ...
         The user must have run 'rsem-prepare-reference' with a reference_name
         before running this program.
     quiet:

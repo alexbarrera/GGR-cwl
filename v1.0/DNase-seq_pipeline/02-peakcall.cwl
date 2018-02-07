@@ -26,9 +26,9 @@
           valueFrom: ${return true}
         format: input_bam_format
         shift:
-          valueFrom: $(-100)
+          valueFrom: ${return -100}
         q:
-          valueFrom: $(0.10)
+          valueFrom: ${return 0.10}
         treatment:
           source: input_bam_files
           valueFrom: $([self])

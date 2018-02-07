@@ -3,8 +3,10 @@
  requirements:
     InlineJavascriptRequirement: {}
  inputs:
-    reads2: {type: 'File[]'}
-    reads1: {type: 'File[]'}
+    reads2:
+      type: File[]
+    reads1:
+      type: File[]
  expression: |
     ${
       var merged_list=[];
@@ -15,4 +17,8 @@
     }
  outputs:
     zipped_list:
-      type: File[][]
+      type:
+        type: array
+        items:
+          type: array
+          items: File

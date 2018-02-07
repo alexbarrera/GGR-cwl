@@ -107,7 +107,7 @@
         broad:
           valueFrom: ${return true}
         q:
-          valueFrom: $(0.1)
+          valueFrom: ${return 0.1}
         treatment:
           source: input_bam_files
           valueFrom: $([self])
