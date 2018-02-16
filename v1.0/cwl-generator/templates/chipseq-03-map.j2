@@ -1,19 +1,25 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.0
-doc: 'ChIP-seq 03 mapping - reads: pe'
+doc: 'ChIP-seq 03 mapping - reads: {{read_type|upper}}'
 requirements:
  - class: ScatterFeatureRequirement
  - class: SubworkflowFeatureRequirement
  - class: StepInputExpressionRequirement
  - class: InlineJavascriptRequirement
 inputs:
+{% if read_type == "pe" %}
    input_fastq_read1_files:
      doc: Input fastq paired-end read 1 files
      type: File[]
    input_fastq_read2_files:
      doc: Input fastq paired-end read 2 files
      type: File[]
+{% else %}
+   input_fastq_files:
+     doc: Input fastq files
+     type: File[]
+{% endif %}
    genome_sizes_file:
      doc: Genome sizes tab-delimited file (used in samtools)
      type: File
@@ -37,7 +43,7 @@ steps:
    extract_basename_1:
      run: ../utils/extract-basename.cwl
      in:
-       input_file: input_fastq_read1_files
+       input_file: input_fastq{% if read_type == "pe" %}_read1{% endif %}_files
      scatter: input_file
      out:
      - output_basename
@@ -48,16 +54,24 @@ steps:
      scatter: file_path
      out:
      - output_path
-   bowtie-pe:
-     run: ../map/bowtie-pe.cwl
+   bowtie-{{ read_type }}:
+     run: ../map/bowtie-{{ read_type }}.cwl
      scatterMethod: dotproduct
      scatter:
+{% if read_type == "pe" %}
      - input_fastq_read1_file
      - input_fastq_read2_file
+{% else %}
+     - input_fastq_file
+{% endif %}
      - output_filename
      in:
+{% if read_type == "pe" %}
        input_fastq_read1_file: input_fastq_read1_files
        input_fastq_read2_file: input_fastq_read2_files
+{% else %}
+       input_fastq_file: input_fastq_files
+{% endif %}
        output_filename: extract_basename_2/output_path
        v:
          valueFrom: ${return 2}
@@ -74,7 +88,7 @@ steps:
      - input_file
      in:
        nthreads: nthreads
-       input_file: bowtie-pe/output_aligned_file
+       input_file: bowtie-{{ read_type }}/output_aligned_file
      out:
      - bam_file
    sort_bams:
@@ -115,8 +129,10 @@ steps:
      in:
        input_sorted_file: filtered2sorted/sorted_file
        output_file_basename: extract_basename_2/output_path
+{% if read_type == 'pe' %}
        pe:
          default: true
+{% endif %}
      out:
      - output_file
    preseq-lc-extrap:
@@ -130,8 +146,10 @@ steps:
        output_file_basename: extract_basename_2/output_path
        s:
          valueFrom: ${return 100000}
+{% if read_type == 'pe' %}
        pe:
          valueFrom: ${return true}
+{% endif %}
      out:
      - output_file
    execute_pcr_bottleneck_coef:
@@ -153,6 +171,8 @@ steps:
        picard_jar_path: picard_jar_path
        output_filename: extract_basename_2/output_path
        input_file: filtered2sorted/sorted_file
+{#        remove_duplicates:#}
+{#          valueFrom: ${return false}#}
      out:
      - output_metrics_file
      - output_dedup_bam_file
@@ -198,7 +218,7 @@ steps:
      run: ../map/bowtie-log-read-count.cwl
      scatter: bowtie_log
      in:
-       bowtie_log: bowtie-pe/output_bowtie_log
+       bowtie_log: bowtie-{{ read_type }}/output_bowtie_log
      out:
      - output
    percent_uniq_reads:
@@ -245,7 +265,7 @@ outputs:
    output_bowtie_log:
      doc: Bowtie log file.
      type: File[]
-     outputSource: bowtie-pe/output_bowtie_log
+     outputSource: bowtie-{{ read_type }}/output_bowtie_log
    output_preseq_c_curve_files:
      doc: Preseq c_curve output files.
      type: File[]

@@ -8,9 +8,9 @@ import os
 def get_cwl_name(template_name, conf_obj):
     if 'chipseq-pipeline' == template_name:
         if "control" not in conf_obj['sample_types']:
-            suf_list = [conf_obj['read_type'], conf_obj['peak_type']]
+            suf_list = [conf_obj['read_type']]
         else:
-            suf_list = [conf_obj['read_type'], conf_obj['peak_type'], 'with-control']
+            suf_list = [conf_obj['read_type'], 'with-control']
         return "pipeline-%s" % '-'.join(suf_list)
     if 'chipseq-05-quantification' == template_name:
         if "control" not in conf_obj['sample_types']:
@@ -18,10 +18,10 @@ def get_cwl_name(template_name, conf_obj):
         return "05-quantification-with-control"
     if 'chipseq-04-peakcall' == template_name:
         if "control" not in conf_obj['sample_types']:
-            suf_list = [conf_obj['peak_type']]
+            suf_list = []
         else:
-            suf_list = [conf_obj['peak_type'], 'with-control']
-        return "04-peakcall-%s" % '-'.join(suf_list)
+            suf_list = ['with-control']
+        return "%s" % '-'.join(["04-peakcall"] + suf_list)
     if 'chipseq-03-map' == template_name:
         return "03-map-%s" % conf_obj['read_type']
     if 'chipseq-02-trim' == template_name:

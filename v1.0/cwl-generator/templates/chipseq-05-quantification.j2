@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.0
-doc: 'ChIP-seq - Quantification - samples: treatment and control'
+doc: 'ChIP-seq - Quantification - samples: {{ sample_types|join(' and ') }}'
 requirements:
  - class: ScatterFeatureRequirement
  - class: StepInputExpressionRequirement
@@ -9,8 +9,10 @@ requirements:
 inputs:
    input_trt_bam_files:
      type: File[]
+{% if 'control' in sample_types %}
    input_ctrl_bam_files:
      type: File[]
+{%  endif %}
    input_genome_sizes:
      type: File
    nthreads:
@@ -62,6 +64,7 @@ steps:
          valueFrom: .rpkm.bw
      out:
      - output_bam_coverage
+{% if 'control' in sample_types %}
    bamCoverage-rpkm-ctrl:
      run: ../quant/deeptools-bamcoverage.cwl
      in:
@@ -100,6 +103,7 @@ steps:
          valueFrom: .ctrl_subtracted.bw
      out:
      - output
+{% endif %}
 outputs:
    bigwig_raw_files:
      doc: Raw reads bigWig (signal) files
@@ -109,6 +113,7 @@ outputs:
      doc: Fragment extended RPKM bigWig (signal) files
      type: File[]
      outputSource: bamCoverage-rpkm-trt/output_bam_coverage
+{% if 'control' in sample_types %}
    bigwig_ctrl_subtracted_rpkm_extended_files:
      doc: Control subtracted fragment extended RPKM bigWig (signal) files
      type: File[]
@@ -117,3 +122,4 @@ outputs:
      doc: Fragment extended RPKM bigWig (signal) control files
      type: File[]
      outputSource: bamCoverage-rpkm-ctrl/output_bam_coverage
+{% endif %}
