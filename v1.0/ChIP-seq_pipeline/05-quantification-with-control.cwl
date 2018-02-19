@@ -57,7 +57,7 @@ steps:
        normalizeUsingRPKM:
          valueFrom: ${return true}
        binSize:
-         valueFrom: ${return 100000}
+         valueFrom: ${return 1}
        output_suffix:
          valueFrom: .rpkm.bw
      out:
@@ -74,7 +74,7 @@ steps:
        normalizeUsingRPKM:
          valueFrom: ${return true}
        binSize:
-         valueFrom: ${return 100000}
+         valueFrom: ${return 1}
        output_suffix:
          valueFrom: .rpkm.bw
      scatter: bam
@@ -93,7 +93,7 @@ steps:
        bigwig1: bamCoverage-rpkm-trt/output_bam_coverage
        bigwig2: bamCoverage-rpkm-ctrl/output_bam_coverage
        binSize:
-         valueFrom: ${return 100000}
+         valueFrom: ${return 1}
        outFileFormat:
          valueFrom: bigwig
        output_suffix:

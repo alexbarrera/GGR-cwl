@@ -55,7 +55,7 @@ steps:
        normalizeUsingRPKM:
          valueFrom: ${return true}
        binSize:
-         valueFrom: ${return 100000}
+         valueFrom: ${return 1}
        output_suffix:
          valueFrom: .rpkm.bw
      out:
