@@ -1,24 +1,21 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.0
-doc: 'ATAC-seq 02 trimming - reads: PE'
+doc: 'ATAC-seq 02 trimming - reads: {{read_type|upper}}'
 requirements:
  - class: ScatterFeatureRequirement
  - class: StepInputExpressionRequirement
  - class: InlineJavascriptRequirement
+{% set read_pairs = ["_read1", "_read2"] if read_type == "pe" else [""] %}
 inputs:
-   input_read1_fastq_files:
-     doc: Input fastq files for paired_read1
+{% for read_pair in read_pairs %}
+   input{{ read_pair }}_fastq_files:
+     doc: Input fastq files{% if read_type == 'pe' %} for paired{{ read_pair }}{% endif %}
      type: File[]
-   input_read1_adapters_files:
-     doc: Input adapters files for paired_read1
+   input{{ read_pair }}_adapters_files:
+     doc: Input adapters files{% if read_type == 'pe' %} for paired{{ read_pair }}{% endif %}
      type: File[]
-   input_read2_fastq_files:
-     doc: Input fastq files for paired_read2
-     type: File[]
-   input_read2_adapters_files:
-     doc: Input adapters files for paired_read2
-     type: File[]
+{% endfor %}
    quality_score:
      default: -phred33
      type: string
@@ -34,6 +31,7 @@ inputs:
      doc: Number of threads
      type: int
 steps:
+{% if read_type == 'pe' %}
    concat_adapters:
      run: ../utils/concat-files.cwl
      in:
@@ -45,31 +43,38 @@ steps:
      - input_file2
      out:
      - output_file
-   extract_basename_read1:
+{% endif %}
+{% for read_pair in read_pairs %}
+   extract_basename{{ read_pair }}:
      run: ../utils/extract-basename.cwl
      scatter: input_file
      in:
-       input_file: trimmomatic/output_read1_trimmed_file
-     out:
-     - output_basename
-   extract_basename_read2:
-     run: ../utils/extract-basename.cwl
-     scatter: input_file
-     in:
+{% if read_type == "pe" and read_pair == "_read2" %}
        input_file: trimmomatic/output_read2_trimmed_paired_file
+{% else %}
+       input_file: trimmomatic/output{% if read_type == "se" %}_read1{% else %}{{ read_pair }}{% endif %}_trimmed_file
+{% endif %}
      out:
      - output_basename
+{% endfor %}
    trimmomatic:
      run: ../trimmomatic/trimmomatic.cwl
      scatterMethod: dotproduct
      scatter:
      - input_read1_fastq_file
+{% if read_type == "pe" %}
      - input_read2_fastq_file
+{% endif %}
      - input_adapters_file
      in:
+{% if read_type == "pe" %}
        input_read1_fastq_file: input_read1_fastq_files
        input_read2_fastq_file: input_read2_fastq_files
        input_adapters_file: concat_adapters/output_file
+{% else %}
+       input_read1_fastq_file: input_fastq_files
+       input_adapters_file: input_adapters_files
+{% endif %}
        phred:
          valueFrom: '33'
        nthreads: nthreads
@@ -86,46 +91,41 @@ steps:
          valueFrom: ${return 3}
        trimmomatic_jar_path: trimmomatic_jar_path
        end_mode:
-         valueFrom: PE
+         valueFrom: {{ read_type | upper}}
      out:
      - output_read1_trimmed_file
+{% if read_type == "pe" %}
      - output_read2_trimmed_paired_file
-   count_fastq_reads_read1:
+{% endif %}
+{% for read_pair in read_pairs %}
+   count_fastq_reads{{ read_pair }}:
      run: ../utils/count-fastq-reads.cwl
      scatterMethod: dotproduct
      scatter:
      - input_fastq_file
      - input_basename
      in:
-       input_basename: extract_basename_read1/output_basename
-       input_fastq_file: trimmomatic/output_read1_trimmed_file
-     out:
-     - output_read_count
-   count_fastq_reads_read2:
-     run: ../utils/count-fastq-reads.cwl
-     scatterMethod: dotproduct
-     scatter:
-     - input_fastq_file
-     - input_basename
-     in:
-       input_basename: extract_basename_read2/output_basename
+       input_basename: extract_basename{{ read_pair }}/output_basename
+{% if read_type == "pe" and read_pair == "_read2" %}
        input_fastq_file: trimmomatic/output_read2_trimmed_paired_file
+{% else %}
+       input_fastq_file: trimmomatic/output{% if read_type == "se" %}_read1{% else %}{{ read_pair }}{% endif %}_trimmed_file
+{% endif %}
      out:
      - output_read_count
+{% endfor %}
 outputs:
-   output_data_fastq_read1_trimmed_files:
-     doc: Trimmed fastq files for paired_read1
+{% for read_pair in read_pairs %}
+   output_data_fastq{{ read_pair }}_trimmed_files:
+     doc: Trimmed fastq files{% if read_type == 'pe' %} for paired{{ read_pair }}{% endif %}
      type: File[]
-     outputSource: trimmomatic/output_read1_trimmed_file
-   output_trimmed_read1_fastq_read_count:
-     doc: Trimmed read counts of fastq files for paired_read1
-     type: File[]
-     outputSource: count_fastq_reads_read1/output_read_count
-   output_data_fastq_read2_trimmed_files:
-     doc: Trimmed fastq files for paired_read2
-     type: File[]
+{% if read_type == "pe" and read_pair == "_read2" %}
      outputSource: trimmomatic/output_read2_trimmed_paired_file
-   output_trimmed_read2_fastq_read_count:
-     doc: Trimmed read counts of fastq files for paired_read2
+{% else %}
+     outputSource: trimmomatic/output{% if read_type == "se" %}_read1{% else %}{{ read_pair }}{% endif %}_trimmed_file
+{% endif %}
+   output_trimmed{{ read_pair }}_fastq_read_count:
+     doc: Trimmed read counts of fastq files{% if read_type == 'pe' %} for paired{{ read_pair }}{% endif %}
      type: File[]
-     outputSource: count_fastq_reads_read2/output_read_count
+     outputSource: count_fastq_reads{{ read_pair }}/output_read_count
+{% endfor %}

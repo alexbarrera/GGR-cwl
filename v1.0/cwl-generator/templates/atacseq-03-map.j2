@@ -1,19 +1,24 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.0
-doc: 'ATAC-seq 03 mapping - reads: SE'
+doc: 'ATAC-seq 03 mapping - reads: {{read_type|upper}}'
 requirements:
  - class: ScatterFeatureRequirement
  - class: SubworkflowFeatureRequirement
  - class: StepInputExpressionRequirement
  - class: InlineJavascriptRequirement
+{% set read_pairs = ["_read1", "_read2"] if read_type == "pe" else [""] %}
 inputs:
-   input_fastq_files:
-     doc: Input fastq files
+{% for read_pair in read_pairs %}
+   input_fastq{{ read_pair }}_files:
+     doc: Input fastq files{% if read_type == 'pe' %} for paired{{ read_pair }}{% endif %}
      type: File[]
+{% endfor %}
+{% if blacklist_removal %}
    ENCODE_blacklist_bedfile:
      doc: Bedfile containing ENCODE consensus blacklist regions to be excluded.
      type: File
+{% endif %}
    genome_sizes_file:
      doc: Genome sizes tab-delimited file (used in samtools)
      type: File
@@ -35,7 +40,7 @@ steps:
      run: ../utils/extract-basename.cwl
      scatter: input_file
      in:
-       input_file: input_fastq_files
+       input_file: input_fastq{% if read_type == 'pe' %}_read1{% endif %}_files
      out:
      - output_basename
    extract_basename_2:
@@ -45,14 +50,18 @@ steps:
        file_path: extract_basename_1/output_basename
      out:
      - output_path
-   bowtie-se:
-     run: ../map/bowtie-se.cwl
+   bowtie-{{ read_type }}:
+     run: ../map/bowtie-{{ read_type }}.cwl
      scatterMethod: dotproduct
      scatter:
-     - input_fastq_file
+{% for read_pair in read_pairs %}
+     - input_fastq{{ read_pair }}_file
+{% endfor %}
      - output_filename
      in:
-       input_fastq_file: input_fastq_files
+{% for read_pair in read_pairs %}
+       input_fastq{{ read_pair }}_file: input_fastq{{ read_pair }}_files
+{% endfor %}
        output_filename: extract_basename_2/output_path
        v:
          valueFrom: ${return 2}
@@ -68,7 +77,7 @@ steps:
      scatter: input_file
      in:
        nthreads: nthreads
-       input_file: bowtie-se/output_aligned_file
+       input_file: bowtie-{{ read_type }}/output_aligned_file
      out:
      - bam_file
    sort_bams:
@@ -140,6 +149,7 @@ steps:
      scatter: input_file
      out:
      - output_basename
+{% if blacklist_removal %}
    remove_encode_blacklist:
      run: ../map/bedtools-intersect.cwl
      scatterMethod: dotproduct
@@ -154,11 +164,12 @@ steps:
          valueFrom: ${return true}
      out:
      - file_wo_blacklist_regions
+{% endif %}
    sort_dedup_bams:
      run: ../map/samtools-sort.cwl
      scatter: input_file
      in:
-       input_file: remove_encode_blacklist/file_wo_blacklist_regions
+       input_file: {% if blacklist_removal %}remove_encode_blacklist/file_wo_blacklist_regions{% else %}remove_duplicates/output_dedup_bam_file{% endif %}
        nthreads: nthreads
      out:
      - sorted_file
@@ -173,7 +184,7 @@ steps:
    mapped_reads_count:
      run: ../map/bowtie-log-read-count.cwl
      in:
-       bowtie_log: bowtie-se/output_bowtie_log
+       bowtie_log: bowtie-{{ read_type }}/output_bowtie_log
      scatter: bowtie_log
      out:
      - output
@@ -221,7 +232,7 @@ outputs:
    output_bowtie_log:
      doc: Bowtie log file.
      type: File[]
-     outputSource: bowtie-se/output_bowtie_log
+     outputSource: bowtie-{{ read_type }}/output_bowtie_log
    output_preseq_c_curve_files:
      doc: Preseq c_curve output files.
      type: File[]
