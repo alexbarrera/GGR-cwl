@@ -54,8 +54,8 @@ steps:
          valueFrom: bigwig
        extendReads:
          valueFrom: ${return 200}
-       normalizeUsingRPKM:
-         valueFrom: ${return true}
+       normalizeUsing:
+         valueFrom: RPKM
        binSize:
          valueFrom: ${return 1}
        output_suffix:
@@ -71,8 +71,8 @@ steps:
          valueFrom: bigwig
        extendReads:
          valueFrom: ${return 200}
-       normalizeUsingRPKM:
-         valueFrom: ${return true}
+       normalizeUsing:
+         valueFrom: RPKM
        binSize:
          valueFrom: ${return 1}
        output_suffix:

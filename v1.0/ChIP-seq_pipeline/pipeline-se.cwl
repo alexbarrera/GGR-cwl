@@ -88,6 +88,10 @@
       doc: Filtered BAM files (post-processing end point) for treatment
       type: File[]
       outputSource: map_treatment/output_data_sorted_dedup_bam_files
+    map_treatment_dups_marked_bam_files:
+      doc: Filtered BAM files with duplicates marked (post-processing end point) for treatment
+      type: File[]
+      outputSource: map_treatment/output_data_sorted_dups_marked_bam_files
     map_treatment_pbc_files:
       doc: PCR Bottleneck Coefficient files (used to flag samples when pbc<0.5) for control
       type: File[]
@@ -218,6 +222,7 @@
         nthreads: nthreads_map
       out:
       - output_data_sorted_dedup_bam_files
+      - output_data_sorted_dups_marked_bam_files
       - output_picard_mark_duplicates_files
       - output_pbc_files
       - output_bowtie_log

@@ -159,8 +159,8 @@ steps:
        bam: split_bams/bam_minus_files
        output_suffix:
          valueFrom: .norm-minus-pre-negated-bw
-       normalizeUsingRPKM:
-         valueFrom: ${return true}
+       normalizeUsing:
+         valueFrom: RPKM
      out:
      - output_bam_coverage
    bw2bdg-minus:
@@ -243,8 +243,8 @@ steps:
        bam: split_bams/bam_plus_files
        output_suffix:
          valueFrom: .norm.bw
-       normalizeUsingRPKM:
-         valueFrom: ${return true}
+       normalizeUsing:
+         valueFrom: RPKM
      out:
      - output_bam_coverage
    bedtools_genomecov_plus:

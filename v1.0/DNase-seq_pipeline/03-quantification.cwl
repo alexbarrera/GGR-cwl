@@ -88,8 +88,8 @@
         numberOfProcessors: nthreads
         extendReads:
           valueFrom: ${return 200}
-        normalizeUsingRPKM:
-          valueFrom: ${return true}
+        normalizeUsing:
+          valueFrom: RPKM
         binSize:
           valueFrom: ${return 50}
         bam: input_bam_files

@@ -9,11 +9,11 @@
  inputs:
     remove_duplicates:
       type: boolean
-      default: true
+      default: false
       inputBinding:
         valueFrom: $('REMOVE_DUPLICATES=' + self)
         position: 5
-      doc: If true do not write duplicates to the output file instead of writing them with appropriate flags set.  (Default true).
+      doc: If true do not write duplicates to the output file instead of writing them with appropriate flags set.  (Default false).
     input_file:
       type: File
       inputBinding:

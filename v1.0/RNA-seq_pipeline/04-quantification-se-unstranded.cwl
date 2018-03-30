@@ -150,7 +150,7 @@ steps:
        bam: input_bam_files
        output_suffix:
          valueFrom: .norm.bw
-       normalizeUsingRPKM:
-         valueFrom: ${return true}
+       normalizeUsing:
+         valueFrom: RPKM
      out:
      - output_bam_coverage

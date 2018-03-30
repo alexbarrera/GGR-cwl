@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.0
-doc: 'ChIP-seq 03 mapping - reads: pe'
+doc: 'ChIP-seq 03 mapping - reads: PE'
 requirements:
  - class: ScatterFeatureRequirement
  - class: SubworkflowFeatureRequirement
@@ -116,7 +116,7 @@ steps:
        input_sorted_file: filtered2sorted/sorted_file
        output_file_basename: extract_basename_2/output_path
        pe:
-         default: true
+         valueFrom: ${return true}
      out:
      - output_file
    preseq-lc-extrap:
@@ -142,7 +142,45 @@ steps:
      run: ../map/pcr-bottleneck-coef.cwl
      out:
      - pbc_file
-   remove_duplicates:
+   remove_encode_blacklist:
+     run: ../map/bedtools-intersect.cwl
+     scatterMethod: dotproduct
+     scatter:
+     - a
+     - output_basename_file
+     in:
+       a: filtered2sorted/sorted_file
+       b: ENCODE_blacklist_bedfile
+       output_basename_file: extract_basename_2/output_path
+       v:
+         valueFrom: ${return true}
+     out:
+     - file_wo_blacklist_regions
+   sort_masked_bams:
+     run: ../map/samtools-sort.cwl
+     scatter:
+     - input_file
+     in:
+       nthreads: nthreads
+       input_file: remove_encode_blacklist/file_wo_blacklist_regions
+     out:
+     - sorted_file
+   index_masked_bams:
+     run: ../map/samtools-index.cwl
+     scatter:
+     - input_file
+     in:
+       input_file: sort_masked_bams/sorted_file
+     out:
+     - indexed_file
+   masked_file_basename:
+     run: ../utils/extract-basename.cwl
+     scatter: input_file
+     in:
+       input_file: remove_encode_blacklist/file_wo_blacklist_regions
+     out:
+     - output_basename
+   mark_duplicates:
      run: ../map/picard-MarkDuplicates.cwl
      scatterMethod: dotproduct
      scatter:
@@ -151,39 +189,55 @@ steps:
      in:
        java_opts: picard_java_opts
        picard_jar_path: picard_jar_path
-       output_filename: extract_basename_2/output_path
-       input_file: filtered2sorted/sorted_file
+       output_filename: masked_file_basename/output_basename
+       input_file: index_masked_bams/indexed_file
+       output_suffix:
+         valueFrom: bam
      out:
      - output_metrics_file
      - output_dedup_bam_file
-   mapped_file_basename:
-     run: ../utils/extract-basename.cwl
-     scatter: input_file
-     in:
-       input_file: remove_duplicates/output_dedup_bam_file
-     out:
-     - output_basename
-   remove_encode_blacklist:
-     run: ../map/bedtools-intersect.cwl
-     scatterMethod: dotproduct
+   sort_dups_marked_bams:
+     run: ../map/samtools-sort.cwl
      scatter:
-     - a
-     - output_basename_file
+     - input_file
      in:
-       a: remove_duplicates/output_dedup_bam_file
-       b: ENCODE_blacklist_bedfile
-       output_basename_file: mapped_file_basename/output_basename
-       v:
-         default: true
+       nthreads: nthreads
+       input_file: mark_duplicates/output_dedup_bam_file
+       suffix:
+         valueFrom: .dups_marked.bam
      out:
-     - file_wo_blacklist_regions
+     - sorted_file
+   index_dups_marked_bams:
+     run: ../map/samtools-index.cwl
+     scatter:
+     - input_file
+     in:
+       input_file: sort_dups_marked_bams/sorted_file
+     out:
+     - indexed_file
+   remove_duplicates:
+     run: ../map/samtools-view.cwl
+     scatter:
+     - input_file
+     in:
+       input_file: index_dups_marked_bams/indexed_file
+       F:
+         valueFrom: ${return 1024}
+       suffix:
+         valueFrom: .dedup.bam
+       b:
+         valueFrom: ${return true}
+       outfile_name:
+         valueFrom: ${return inputs.input_file.basename.replace('dups_marked', 'dedup')}
+     out:
+     - outfile
    sort_dedup_bams:
      run: ../map/samtools-sort.cwl
      scatter:
      - input_file
      in:
        nthreads: nthreads
-       input_file: remove_encode_blacklist/file_wo_blacklist_regions
+       input_file: remove_duplicates/outfile
      out:
      - sorted_file
    index_dedup_bams:
@@ -230,10 +284,14 @@ outputs:
      doc: BAM files without duplicate reads, sorted and indexed.
      type: File[]
      outputSource: index_dedup_bams/indexed_file
+   output_data_sorted_dups_marked_bam_files:
+     doc: BAM files with duplicate reads flagged using picard MarkDuplicates, sorted and indexed.
+     type: File[]
+     outputSource: index_dups_marked_bams/indexed_file
    output_picard_mark_duplicates_files:
      doc: Picard MarkDuplicates metrics files.
      type: File[]
-     outputSource: remove_duplicates/output_metrics_file
+     outputSource: mark_duplicates/output_metrics_file
    output_read_count_mapped_filtered:
      doc: Read counts of the mapped and filtered BAM files
      type: File[]

@@ -22,11 +22,13 @@
     Optional arguments:
       --help, -h            show this help message and exit
       --scaleFactor SCALEFACTOR
-                            Indicate a number that you would like to use. When
-                            used in combination with --normalizeTo1x or
-                            --normalizeUsingRPKM, the computed scaling factor will
-                            be multiplied by the given scale factor. (default:
-                            1.0)
+                            The smooth length defines a window, larger than the
+                            binSize, to average the number of reads. For example,
+                            if the –binSize is set to 20 and the –smoothLength is
+                            set to 60, then, for each bin, the average of the bin
+                            and its left and right neighbors is considered.
+                            Any value smaller than –binSize will be ignored and
+                            no smoothing will be applied. (default: 1.0)
       --MNase               Determine nucleosome positions from MNase-seq data.
                             Only 3 nucleotides at the center of each fragment are
                             counted. The fragment ends are defined by the two mate
@@ -82,15 +84,7 @@
                             ://www.nature.com/nbt/journal/v27/n1/fig_tab/nbt.1518_
                             T1.html for several effective genome sizes. (default:
                             None)
-      --normalizeUsingRPKM  Use Reads Per Kilobase per Million reads to normalize
-                            the number of reads per bin. The formula is: RPKM (per
-                            bin) = number of reads per bin / ( number of mapped
-                            reads (in millions) * bin length (kb) ). Each read is
-                            considered independently,if you want to only count
-                            either of the mate pairs inpaired-end data, use the
-                            --samFlag option. (default: False)
-      --ignoreForNormalization IGNOREFORNORMALIZATION [IGNOREFORNORMALIZATION ...],
-    -ignore IGNOREFORNORMALIZATION [IGNOREFORNORMALIZATION ...]
+    --ignoreForNormalization IGNOREFORNORMALIZATION [IGNOREFORNORMALIZATION ...]
                             A list of space-delimited chromosome names containing
                             those chromosomes that should be excluded for
                             computing the normalization. This is useful when
@@ -159,7 +153,7 @@
     InlineJavascriptRequirement: {}
  hints:
     DockerRequirement:
-      dockerPull: dukegcb/deeptools
+      dockerPull: reddylab/deeptools:3.0.1
  inputs:
     verbose:
       type: boolean?
@@ -222,13 +216,13 @@
         considering samples with unequal coverage across
         chromosomes, like male samples. An usage examples is
     outFileName:
-#-------------------------------------
-#--- Output formatting arguments -----
-#-------------------------------------
       type: string?
       doc: |
         FILENAME
         Output file name. (default: input BAM filename with bigwig [*.bw] or bedgraph [*.bdg] extension.)
+#-------------------------------------
+#--- Output formatting arguments -----
+#-------------------------------------
     smoothLength:
       type: int?
       inputBinding:
@@ -319,12 +313,13 @@
         position: 1
         prefix: --scaleFactor
       doc: |
-        SCALEFACTOR
-        Indicate a number that you would like to use. When
-        used in combination with --normalizeTo1x or
-        --normalizeUsingRPKM, the computed scaling factor will
-        be multiplied by the given scale factor. (default:
-        1.0)
+        The smooth length defines a window, larger than the
+        binSize, to average the number of reads. For example,
+        if the –binSize is set to 20 and the –smoothLength is
+        set to 60, then, for each bin, the average of the bin
+        and its left and right neighbors is considered.
+        Any value smaller than –binSize will be ignored and
+        no smoothing will be applied. (default: 1.0)
     skipNonCoveredRegions:
       type: boolean?
       inputBinding:
@@ -365,49 +360,47 @@
         computing time. The format is chr:start:end, for
         example --region chr10 or --region
         chr10:456700:891000. (default: None)
-    normalizeUsingRPKM:
-      type: boolean?
-      inputBinding:
-        position: 1
-        prefix: --normalizeUsingRPKM
-      doc: |
-        Use Reads Per Kilobase per Million reads to normalize
-        the number of reads per bin. The formula is: RPKM (per
-        bin) = number of reads per bin / ( number of mapped
-        reads (in millions) * bin length (kb) ). Each read is
-        considered independently,if you want to only count
-        either of the mate pairs inpaired-end data, use the
-        --samFlag option. (default: False)
-    normalizeTo1x:
 #-----------------------------------------
 #-- Read coverage normalization options --
 #-----------------------------------------      
+    normalizeUsing:
       type: string?
       inputBinding:
         position: 1
-        prefix: --normalizeTo1x
+        prefix: --normalizeUsing
       doc: |
-        EFFECTIVE GENOME SIZE LENGTH
-        Report read coverage normalized to 1x sequencing depth
-        (also known as Reads Per Genomic Content (RPGC)).
-        Sequencing depth is defined as: (total number of
-        mapped reads * fragment length) / effective genome
-        size. The scaling factor used is the inverse of the
-        sequencing depth computed for the sample to match the
-        1x coverage. To use this option, the effective genome
-        size has to be indicated after the option. The
-        effective genome size is the portion of the genome
-        that is mappable. Large fractions of the genome are
-        stretches of NNNN that should be discarded. Also, if
-        repetitive regions were not included in the mapping of
-        reads, the effective genome size needs to be adjusted
-        accordingly. Common values are: mm9: 2,150,570,000;
-        hg19:2,451,960,000; dm3:121,400,000 and
-        ce10:93,260,000. See Table 2 of http://www.plosone.org
-        /article/info:doi/10.1371/journal.pone.0030377 or http
-        ://www.nature.com/nbt/journal/v27/n1/fig_tab/nbt.1518_
-        T1.html for several effective genome sizes. (default:
-        None)
+        Possible choices: RPKM, CPM, BPM, RPGC
+
+        Use one of the entered methods to normalize the number of reads per bin.
+        By default, no normalization is performed. RPKM = Reads Per Kilobase per
+        Million mapped reads; CPM = Counts Per Million mapped reads, same as
+        CPM in RNA-seq; BPM = Bins Per Million mapped reads, same as TPM in
+        RNA-seq; RPGC = reads per genomic content (1x normalization);
+        Mapped reads are considered after blacklist filtering (if applied).
+        RPKM (per bin) = number of reads per bin / (number of mapped reads (in millions) * bin length (kb)).
+        CPM (per bin) = number of reads per bin / number of mapped reads (in millions).
+        BPM (per bin) = number of reads per bin / sum of all reads per bin (in millions).
+        RPGC (per bin) = number of reads per bin / scaling factor for 1x average coverage.
+        This scaling factor, in turn, is determined from the sequencing depth:
+        (total number of mapped reads * fragment length) / effective genome size.
+        The scaling factor used is the inverse of the sequencing depth
+        computed for the sample to match the 1x coverage.
+        This option requires –effectiveGenomeSize.
+        Each read is considered independently, if you want to only count one
+        mate from a pair in paired-end data, then use
+        the –samFlagInclude/–samFlagExclude options.
+    ignoreForNormalization:
+      type:
+        - 'null'
+        - {type: array, items: string}
+      inputBinding:
+        position: 1
+        prefix: --ignoreForNormalization
+      doc: |
+        A list of space-delimited chromosome names containing those chromosomes
+        that should be excluded for computing the normalization. This is useful
+        when considering samples with unequal coverage across chromosomes, like
+        male samples. An usage examples is –ignoreForNormalization chrX chrM.
     blackListFileName:
       type: File?
       inputBinding:

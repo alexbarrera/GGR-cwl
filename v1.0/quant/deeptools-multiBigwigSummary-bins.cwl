@@ -11,7 +11,7 @@
     ShellCommandRequirement: {}
  hints:
     DockerRequirement:
-      dockerPull: dukegcb/deeptools
+      dockerPull: reddylab/deeptools:3.0.1
  inputs:
     chromosomesToSkip:
       type: File?

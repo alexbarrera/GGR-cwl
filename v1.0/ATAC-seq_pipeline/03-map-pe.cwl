@@ -152,35 +152,52 @@ steps:
      - sorted_file
    index_dedup_bams:
      run: ../map/samtools-index.cwl
+     scatter: input_file
      in:
        input_file: sort_dedup_bams/sorted_file
-     scatter:
-     - input_file
      out:
      - indexed_file
    mapped_reads_count:
      run: ../map/bowtie-log-read-count.cwl
+     scatter: bowtie_log
      in:
        bowtie_log: bowtie-pe/output_bowtie_log
-     scatter: bowtie_log
      out:
      - output
    percent_uniq_reads:
      run: ../map/preseq-percent-uniq-reads.cwl
+     scatter: preseq_c_curve_outfile
      in:
        preseq_c_curve_outfile: preseq-c-curve/output_file
-     scatter: preseq_c_curve_outfile
      out:
      - output
    mapped_filtered_reads_count:
      run: ../peak_calling/samtools-extract-number-mapped-reads.cwl
+     scatter: input_bam_file
      in:
        output_suffix:
          valueFrom: .mapped_and_filtered.read_count.txt
-       input_bam_file: sort_dedup_bams/sorted_file
-     scatter: input_bam_file
+       input_bam_file: index_dedup_bams/indexed_file
      out:
      - output_read_count
+   dedup_bam_idxstats:
+     run: ../map/samtools-idxstats.cwl
+     scatter: bam
+     in:
+       bam: index_dedup_bams/indexed_file
+     out:
+     - idxstats_file
+   percent_mitochondrial_reads:
+     run: ../utils/idxstats-percentage-of-reads-in-chrom.cwl
+     scatter: idxstats
+     in:
+       idxstats: dedup_bam_idxstats/idxstats_file
+       chrom:
+         valueFrom: chrM
+       output_filename:
+         valueFrom: ${return inputs.idxstats.basename.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '').replace(/\.[^/.]+$/, '.mitochondrial_percentage.txt')}
+     out:
+     - percent_map
 outputs:
    output_pbc_files:
      doc: PCR Bottleneck Coeficient files.
@@ -214,3 +231,7 @@ outputs:
      doc: Preseq c_curve output files.
      type: File[]
      outputSource: preseq-c-curve/output_file
+   output_percent_mitochondrial_reads:
+     doc: Percentage of mitochondrial reads.
+     type: File[]
+     outputSource: percent_mitochondrial_reads/percent_map
