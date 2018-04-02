@@ -245,6 +245,10 @@
       doc: Peak counts within replicate
       type: File[]
       outputSource: peak_call/output_narrowpeak_count
+    peak_call_narrowpeak_file:
+      doc: Peaks in narrowPeak file format
+      type: File[]
+      outputSource: peak_call/output_narrowpeak_file
     peak_call_narrowpeak_summits_file:
       doc: Peaks summits in bedfile format
       type:
@@ -270,6 +274,10 @@
       doc: Peak counts within replicate
       type: File[]
       outputSource: peak_call/output_broadpeak_count
+    peak_call_broadpeak_file:
+      doc: Peaks in broadPeak file format
+      type: File[]
+      outputSource: peak_call/output_broadpeak_file
     peak_call_broadpeak_summits_file:
       doc: Peaks summits in bedfile format
       type:
