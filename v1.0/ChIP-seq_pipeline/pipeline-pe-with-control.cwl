@@ -145,6 +145,76 @@
       doc: Preseq lc_extrap output files for treatment
       type: File[]
       outputSource: map_treatment/output_preseq_lc_extrap_files
+    peak_call_treatment_spp_x_cross_corr:
+      doc: SPP strand cross correlation summary
+      type: File[]
+      outputSource: peak_call_treatment/output_spp_x_cross_corr
+    peak_call_treatment_spp_x_cross_corr_plot:
+      doc: SPP strand cross correlation plot
+      type: File[]
+      outputSource: peak_call_treatment/output_spp_cross_corr_plot
+    peak_call_treatment_filtered_read_count_file:
+      doc: Filtered read count after peak calling
+      type: File[]
+      outputSource: peak_call_treatment/output_filtered_read_count_file
+    peak_call_treatment_narrowpeak_peak_xls_file:
+      doc: Peak calling report file
+      type: File[]
+      outputSource: peak_call_treatment/output_narrowpeak_xls_file
+    peak_call_treatment_read_in_narrowpeak_count_within_replicate:
+      doc: Peak counts within replicate
+      type: File[]
+      outputSource: peak_call_treatment/output_read_in_narrowpeak_count_within_replicate
+    peak_call_treatment_narrowpeak_count:
+      doc: Peak counts within replicate
+      type: File[]
+      outputSource: peak_call_treatment/output_narrowpeak_count
+    peak_call_treatment_narrowpeak_file:
+      doc: Peaks in narrowPeak file format
+      type: File[]
+      outputSource: peak_call_treatment/output_narrowpeak_file
+    peak_call_treatment_narrowpeak_summits_file:
+      doc: Peaks summits in bedfile format
+      type:
+        type: array
+        items:
+        - 'null'
+        - items: File
+          type: array
+      outputSource: peak_call_treatment/output_narrowpeak_summits_file
+    peak_call_treatment_narrowpeak_bigbed_file:
+      doc: narrowPeaks in bigBed format
+      type: File[]
+      outputSource: peak_call_treatment/output_narrowpeak_bigbed_file
+    peak_call_treatment_broadpeak_peak_xls_file:
+      doc: Peak calling report file
+      type: File[]
+      outputSource: peak_call_treatment/output_broadpeak_xls_file
+    peak_call_treatment_read_in_broadpeak_count_within_replicate:
+      doc: Peak counts within replicate
+      type: File[]
+      outputSource: peak_call_treatment/output_read_in_broadpeak_count_within_replicate
+    peak_call_treatment_broadpeak_count:
+      doc: Peak counts within replicate
+      type: File[]
+      outputSource: peak_call_treatment/output_broadpeak_count
+    peak_call_treatment_broadpeak_file:
+      doc: Peaks in broadPeak file format
+      type: File[]
+      outputSource: peak_call_treatment/output_broadpeak_file
+    peak_call_treatment_broadpeak_summits_file:
+      doc: Peaks summits in bedfile format
+      type:
+        type: array
+        items:
+        - 'null'
+        - items: File
+          type: array
+      outputSource: peak_call_treatment/output_broadpeak_summits_file
+    peak_call_treatment_broadpeak_bigbed_file:
+      doc: broadPeaks in bigBed format
+      type: File[]
+      outputSource: peak_call_treatment/output_broadpeak_bigbed_file
     qc_control_count_raw_reads_read1:
       doc: Raw read counts of fastq files for read 1 after QC for control
       type: File[]
@@ -221,35 +291,35 @@
       doc: Preseq lc_extrap output files for control
       type: File[]
       outputSource: map_control/output_preseq_lc_extrap_files
-    peak_call_spp_x_cross_corr:
+    peak_call_control_spp_x_cross_corr:
       doc: SPP strand cross correlation summary
       type: File[]
-      outputSource: peak_call/output_spp_x_cross_corr
-    peak_call_spp_x_cross_corr_plot:
+      outputSource: peak_call_control/output_spp_x_cross_corr
+    peak_call_control_spp_x_cross_corr_plot:
       doc: SPP strand cross correlation plot
       type: File[]
-      outputSource: peak_call/output_spp_cross_corr_plot
-    peak_call_filtered_read_count_file:
+      outputSource: peak_call_control/output_spp_cross_corr_plot
+    peak_call_control_filtered_read_count_file:
       doc: Filtered read count after peak calling
       type: File[]
-      outputSource: peak_call/output_filtered_read_count_file
-    peak_call_narrowpeak_peak_xls_file:
+      outputSource: peak_call_control/output_filtered_read_count_file
+    peak_call_control_narrowpeak_peak_xls_file:
       doc: Peak calling report file
       type: File[]
-      outputSource: peak_call/output_narrowpeak_xls_file
-    peak_call_read_in_narrowpeak_count_within_replicate:
+      outputSource: peak_call_control/output_narrowpeak_xls_file
+    peak_call_control_read_in_narrowpeak_count_within_replicate:
       doc: Peak counts within replicate
       type: File[]
-      outputSource: peak_call/output_read_in_narrowpeak_count_within_replicate
-    peak_call_narrowpeak_count:
+      outputSource: peak_call_control/output_read_in_narrowpeak_count_within_replicate
+    peak_call_control_narrowpeak_count:
       doc: Peak counts within replicate
       type: File[]
-      outputSource: peak_call/output_narrowpeak_count
-    peak_call_narrowpeak_file:
+      outputSource: peak_call_control/output_narrowpeak_count
+    peak_call_control_narrowpeak_file:
       doc: Peaks in narrowPeak file format
       type: File[]
-      outputSource: peak_call/output_narrowpeak_file
-    peak_call_narrowpeak_summits_file:
+      outputSource: peak_call_control/output_narrowpeak_file
+    peak_call_control_narrowpeak_summits_file:
       doc: Peaks summits in bedfile format
       type:
         type: array
@@ -257,28 +327,28 @@
         - 'null'
         - items: File
           type: array
-      outputSource: peak_call/output_narrowpeak_summits_file
-    peak_call_narrowpeak_bigbed_file:
+      outputSource: peak_call_control/output_narrowpeak_summits_file
+    peak_call_control_narrowpeak_bigbed_file:
       doc: narrowPeaks in bigBed format
       type: File[]
-      outputSource: peak_call/output_narrowpeak_bigbed_file
-    peak_call_broadpeak_peak_xls_file:
+      outputSource: peak_call_control/output_narrowpeak_bigbed_file
+    peak_call_control_broadpeak_peak_xls_file:
       doc: Peak calling report file
       type: File[]
-      outputSource: peak_call/output_broadpeak_xls_file
-    peak_call_read_in_broadpeak_count_within_replicate:
+      outputSource: peak_call_control/output_broadpeak_xls_file
+    peak_call_control_read_in_broadpeak_count_within_replicate:
       doc: Peak counts within replicate
       type: File[]
-      outputSource: peak_call/output_read_in_broadpeak_count_within_replicate
-    peak_call_broadpeak_count:
+      outputSource: peak_call_control/output_read_in_broadpeak_count_within_replicate
+    peak_call_control_broadpeak_count:
       doc: Peak counts within replicate
       type: File[]
-      outputSource: peak_call/output_broadpeak_count
-    peak_call_broadpeak_file:
+      outputSource: peak_call_control/output_broadpeak_count
+    peak_call_control_broadpeak_file:
       doc: Peaks in broadPeak file format
       type: File[]
-      outputSource: peak_call/output_broadpeak_file
-    peak_call_broadpeak_summits_file:
+      outputSource: peak_call_control/output_broadpeak_file
+    peak_call_control_broadpeak_summits_file:
       doc: Peaks summits in bedfile format
       type:
         type: array
@@ -286,11 +356,11 @@
         - 'null'
         - items: File
           type: array
-      outputSource: peak_call/output_broadpeak_summits_file
-    peak_call_broadpeak_bigbed_file:
+      outputSource: peak_call_control/output_broadpeak_summits_file
+    peak_call_control_broadpeak_bigbed_file:
       doc: broadPeaks in bigBed format
       type: File[]
-      outputSource: peak_call/output_broadpeak_bigbed_file
+      outputSource: peak_call_control/output_broadpeak_bigbed_file
     quant_bigwig_raw_files:
       doc: Raw reads bigWig (signal) files
       type: File[]
@@ -362,6 +432,32 @@
       - output_preseq_lc_extrap_files
       - output_percentage_uniq_reads
       - output_read_count_mapped
+    peak_call_treatment:
+      run: 04-peakcall-with-control.cwl
+      in:
+        input_bam_files: map_treatment/output_data_sorted_dedup_bam_files
+        input_control_bam_files: map_control/output_data_sorted_dedup_bam_files
+        input_genome_sizes: genome_sizes_file
+        genome_effective_size: genome_effective_size
+        as_narrowPeak_file: as_narrowPeak_file
+        as_broadPeak_file: as_broadPeak_file
+        nthreads: nthreads_peakcall
+      out:
+      - output_spp_x_cross_corr
+      - output_spp_cross_corr_plot
+      - output_filtered_read_count_file
+      - output_read_in_narrowpeak_count_within_replicate
+      - output_narrowpeak_count
+      - output_narrowpeak_file
+      - output_narrowpeak_summits_file
+      - output_narrowpeak_bigbed_file
+      - output_narrowpeak_xls_file
+      - output_read_in_broadpeak_count_within_replicate
+      - output_broadpeak_count
+      - output_broadpeak_file
+      - output_broadpeak_summits_file
+      - output_broadpeak_bigbed_file
+      - output_broadpeak_xls_file
     qc_control:
       run: 01-qc-pe.cwl
       in:
@@ -416,11 +512,10 @@
       - output_preseq_lc_extrap_files
       - output_percentage_uniq_reads
       - output_read_count_mapped
-    peak_call:
-      run: 04-peakcall-with-control.cwl
+    peak_call_control:
+      run: 04-peakcall.cwl
       in:
-        input_bam_files: map_treatment/output_data_sorted_dedup_bam_files
-        input_control_bam_files: map_control/output_data_sorted_dedup_bam_files
+        input_bam_files: map_control/output_data_sorted_dedup_bam_files
         input_genome_sizes: genome_sizes_file
         genome_effective_size: genome_effective_size
         as_narrowPeak_file: as_narrowPeak_file
