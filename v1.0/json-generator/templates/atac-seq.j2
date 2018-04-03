@@ -23,7 +23,7 @@
     "nthreads_peakcall": {{ nthreads }},
     "nthreads_quant": {{ nthreads }},
     "trimmomatic_jar_path": "{{ conf_args.trimmomatic_jar }}",
-    "trimmomatic_java_opts": "-Xms{{ (mem/2) | round | int }}m -Xmx{{ mem }}m",
+    "trimmomatic_java_opts": "-Xms{{ (conf_args.mem/2) | round | int }}m -Xmx{{ conf_args.mem }}m",
     "picard_jar_path": "{{ conf_args.picard_jar }}",
-    "picard_java_opts": "-Xms{{ (mem/2) | round | int }}m -Xmx{{ mem }}m"
+    "picard_java_opts": "-Xms{{ (conf_args.mem/2) | round | int }}m -Xmx{{ conf_args.mem }}m"
 }

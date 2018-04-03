@@ -11,42 +11,44 @@
     {% endfor %}
     ],
 {% endif %}
-    "default_adapters_file": { "class": "File", "path": "/data/reddylab/projects/GGR/auxiliary/adapters/default_adapters.fasta" },
-    "genome_sizes_file": { "class": "File", "path": "/data/reddylab/projects/GGR/auxiliary/hg38.sizes" },
-    "sjdbOverhang": "49",
-    "annotation_file": {"class": "File", "path": "/data/reddylab/Reference_Data/Gencode/v22/gencode.v22.annotation.gtf"},
+    "default_adapters_file": { "class": "File", "path": "{{ conf_args.default_adapters }}" },
+    "genome_sizes_file": { "class": "File", "path": "{{ conf_args.genome_sizes_file }}" },
+    "sjdbOverhang": "{{ conf_args.read_length-1 }}",
+    "annotation_file": {"class": "File", "path": "{{ conf_args.annotation_file }}"},
     "genome_fasta_files": [
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"}
+    {%  for genome_fasta_file in conf_args.genome_fasta_files %}
+        {"class": "File", "path": "{{ genome_fasta_file }}"}{% if not loop.last %},{% endif %}
+    {% endfor %}
     ],
     "genomeDirFiles": [
-        {"class": "File", "path": "{{ genomeDir }}/Genome"},
-        {"class": "File", "path": "{{ genomeDir }}/SA"},
-        {"class": "File", "path": "{{ genomeDir }}/SAindex"},
-        {"class": "File", "path": "{{ genomeDir }}/chrLength.txt"},
-        {"class": "File", "path": "{{ genomeDir }}/chrName.txt"},
-        {"class": "File", "path": "{{ genomeDir }}/chrNameLength.txt"},
-        {"class": "File", "path": "{{ genomeDir }}/chrStart.txt"},
-        {"class": "File", "path": "{{ genomeDir }}/exonGeTrInfo.tab"},
-        {"class": "File", "path": "{{ genomeDir }}/exonInfo.tab"},
-        {"class": "File", "path": "{{ genomeDir }}/geneInfo.tab"},
-        {"class": "File", "path": "{{ genomeDir }}/genomeParameters.txt"},
-        {"class": "File", "path": "{{ genomeDir }}/sjdbInfo.txt"},
-        {"class": "File", "path": "{{ genomeDir }}/sjdbList.fromGTF.out.tab"},
-        {"class": "File", "path": "{{ genomeDir }}/sjdbList.out.tab"},
-        {"class": "File", "path": "{{ genomeDir }}/transcriptInfo.tab"}
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/Genome"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/SA"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/SAindex"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrLength.txt"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrName.txt"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrNameLength.txt"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrStart.txt"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/exonGeTrInfo.tab"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/exonInfo.tab"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/geneInfo.tab"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/genomeParameters.txt"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/sjdbInfo.txt"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/sjdbList.fromGTF.out.tab"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/sjdbList.out.tab"},
+        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/transcriptInfo.tab"}
     ],
     "rsem_reference_files": [
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.transcripts.fa"},
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.ti"},
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.seq"},
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.idx.fa"},
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.grp"},
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.n2g.idx.fa"},
-        {"class": "File", "path": "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome.chrlist"}
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.transcripts.fa"},
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.ti"},
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.seq"},
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.idx.fa"},
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.grp"},
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.n2g.idx.fa"},
+        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.chrlist"}
     ],
 {% if 'pe' == wf_conf['rt'] %}
-    "bamtools_forward_filter_file": {"class": "File", "path": "/data/reddylab/projects/GGR/auxiliary/quantification/forward_filter.txt"},
-    "bamtools_reverse_filter_file": {"class": "File", "path": "/data/reddylab/projects/GGR/auxiliary/quantification/reverse_filter.txt"},
+    "bamtools_forward_filter_file": {"class": "File", "path": "{{ conf_args.bamtools_forward_filter }}"},
+    "bamtools_reverse_filter_file": {"class": "File", "path": "{{ conf_args.bamtools_reverse_filter }}"},
 {% endif %}
     "nthreads_qc": {{ nthreads }},
     "nthreads_trimm": {{ nthreads }},
@@ -54,5 +56,5 @@
     "nthreads_peakcall": {{ nthreads }},
     "nthreads_quant": {{ nthreads }},
     "trimmomatic_jar_path": "/data/reddylab/software/Trimmomatic-0.32/trimmomatic-0.32.jar",
-    "trimmomatic_java_opts": "-Xms{{ (mem/2) | round | int }}m -Xmx{{ mem }}m"
+    "trimmomatic_java_opts": "-Xms{{ (conf_args.mem/2) | round | int }}m -Xmx{{ conf_args.mem }}m"
 }
