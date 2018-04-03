@@ -17,31 +17,22 @@
         Number of processors to use. Type "max/2" to use half
         the maximum number of processors or "max" to use all
         available processors. (default: max/2)
-    ratio:
+    operation:
       type: string?
       inputBinding:
         position: 1
-        prefix: --ratio
+        prefix: --operation
       doc: |
-        {log2,ratio,subtract,add,reciprocal_ratio}
-        The default is to compute the log2(ratio) between the
-        two samples. The reciprocal ratio returns the the
-        negative of the inverse of the ratio if the ratio is
-        less than 0. The resulting values are interpreted as
-        negative fold changes. Other possible operations are :
-        simple ratio, subtraction, sum (default: log2)
-        --skipNonCoveredRegions, --skipNAs
-        This parameter determines if non-covered regions
-        (regions without a score) in the bigWig files should
-        be skipped. The default is to treat those regions as
-        having a value of zero. The decision to skip non-
-        covered regions depends on the interpretation of the
-        data. Non-covered regions in a bigWig file may
-        represent repetitive regions that should be skipped.
-        Alternatively, the interpretation of non-covered
-        regions as zeros may be wrong and this option should
-        be used (default: False)
-        Optional arguments:
+        The default is to output the log2ratio of the two
+        samples. The reciprocal ratio returns the the negative
+        of the inverse of the ratio if the ratio is less than
+        0. The resulting values are interpreted as negative
+        fold changes. *NOTE*: Only with --operation subtract
+        can --normalizeUsing RPGC or --normalizeUsing RPKM be
+        used. Instead of performing a computation using both
+        files, the scaled signal can alternatively be output
+        for the first or second file using the '--operation
+        first' or '--operation second' (default: log2)
     bigwig1:
       type: File
       inputBinding:

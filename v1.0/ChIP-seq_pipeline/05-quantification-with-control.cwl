@@ -88,7 +88,7 @@ steps:
      - bigwig2
      in:
        numberOfProcessors: nthreads
-       ratio:
+       operation:
          valueFrom: subtract
        bigwig1: bamCoverage-rpkm-trt/output_bam_coverage
        bigwig2: bamCoverage-rpkm-ctrl/output_bam_coverage
