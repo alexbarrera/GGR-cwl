@@ -554,11 +554,7 @@ outputs:
 baseCommand:
  - bowtie2
 stdout: $(inputs.output_filename + '.sam')
-arguments:
-  - valueFrom: $('2> ' + inputs.output_filename + '.bowtie2.log')
-    position: 100000
-    shellQuote: false
-
+stderr: $(inputs.output_filename + '.bowtie2.log')
 
 doc: |
   Bowtie 2 version 2.2.8 by Ben Langmead (langmea@cs.jhu.edu, www.cs.jhu.edu/~langmea)
