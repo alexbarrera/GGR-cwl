@@ -56,7 +56,7 @@ class MetadataParser(object):
         self.purge_undef_args()
 
     def purge_undef_args(self):
-        for empty_key in [k for k, v in self.__dict__.iteritems() if not v]:
+        for empty_key in [k for k, v in self.__dict__.iteritems() if v is None]:
             del self.__dict__[empty_key]
 
     def render_json(self, wf_conf, samples_list, data_dir, template_name):
