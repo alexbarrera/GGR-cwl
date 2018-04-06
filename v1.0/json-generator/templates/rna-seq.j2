@@ -20,32 +20,14 @@
         {"class": "File", "path": "{{ genome_fasta_file }}"}{% if not loop.last %},{% endif %}
     {% endfor %}
     ],
-    "genomeDirFiles": [
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/Genome"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/SA"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/SAindex"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrLength.txt"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrName.txt"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrNameLength.txt"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/chrStart.txt"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/exonGeTrInfo.tab"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/exonInfo.tab"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/geneInfo.tab"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/genomeParameters.txt"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/sjdbInfo.txt"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/sjdbList.fromGTF.out.tab"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/sjdbList.out.tab"},
-        {"class": "File", "path": "{{ conf_args.star_genome_dir }}/transcriptInfo.tab"}
-    ],
-    "rsem_reference_files": [
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.transcripts.fa"},
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.ti"},
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.seq"},
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.idx.fa"},
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.grp"},
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.n2g.idx.fa"},
-        {"class": "File", "path": "{{ conf_args.rsem_rootname }}.chrlist"}
-    ],
+    "STARgenomeDir": {
+        "class": "Directory",
+        "location": "{{ conf_args.star_genome_dir }}"
+    },
+    "rsem_reference_files": {
+        "class": "Directory",
+        "location": "{{ conf_args.rsem_dir }}"
+    },
 {% if 'pe' == wf_conf['rt'] %}
     "bamtools_forward_filter_file": {"class": "File", "path": "{{ conf_args.bamtools_forward_filter }}"},
     "bamtools_reverse_filter_file": {"class": "File", "path": "{{ conf_args.bamtools_reverse_filter }}"},

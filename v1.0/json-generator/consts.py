@@ -26,7 +26,7 @@ class ReferenceDataset(object):
             self.encode_blacklist_bedfile = "/data/reddylab/Reference_Data/ENCODE/hg38.blacklist.bed"
             self.genome_effective_size = "hs"
             self.annotation_file = "/data/reddylab/Reference_Data/Gencode/v22/gencode.v22.annotation.gtf"
-            self.rsem_rootname = "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome"
+            self.rsem_dir = "/data/reddylab/Reference_Data/Genomes/hg38/RSEM_genome"
             self.genome_fasta_files = ["/data/reddylab/Reference_Data/Genomes/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"]
         elif _genome == 'hg19' or _genome == 'grch37':
             self.bowtie_genome_ref_first_index = "/data/reddylab/Reference_Data/Genomes/hg19/hg19.1.ebwt"
@@ -35,7 +35,7 @@ class ReferenceDataset(object):
             self.encode_blacklist_bedfile = "/data/reddylab/Reference_Data/ENCODE/wgEncodeDacMapabilityConsensusExcludable.hg19.bed"
             self.genome_effective_size = "hs"
             self.annotation_file = "/data/reddylab/Reference_Data/Gencode/v19/gencode.v19.annotation.gtf"
-            self.rsem_rootname = "/data/reddylab/Reference_Data/Genomes/hg19/RSEM_genome"
+            self.rsem_dir = "/data/reddylab/Reference_Data/Genomes/hg19/RSEM_genome"
             self.genome_fasta_files = ["/data/reddylab/Reference_Data/Genomes/hg19/hg19.fa"]
         elif _genome == 'mm10' or _genome == 'grcm38':
             self.bowtie_genome_ref_first_index = "/data/reddylab/Reference_Data/Genomes/mm10/bowtie/GRCm38.1.ebwt"
@@ -44,7 +44,7 @@ class ReferenceDataset(object):
             self.encode_blacklist_bedfile = "/data/reddylab/Reference_Data/ENCODE/mm10.blacklist.bed"
             self.genome_effective_size = "mm"
             self.annotation_file = "/data/reddylab/Reference_Data/Gencode/vM13/gencode.vM13.annotation.gtf"
-            self.rsem_rootname = "/data/reddylab/Reference_Data/Genomes/mm10/RSEM/RSEM_genome"
+            self.rsem_dir = "/data/reddylab/Reference_Data/Genomes/mm10/RSEM/RSEM_genome"
             self.genome_fasta_files = ["/data/reddylab/Reference_Data/Genomes/mm10/GRCm38.primary_assembly.genome.fa"]
         elif _genome == 'mm9' or _genome == 'grcm37' or _genome == 'ncbi37':
             self.bowtie_genome_ref_first_index = "/data/reddylab/Reference_Data/Genomes/mm9/bowtie/mm9.1.ebwt"
@@ -53,7 +53,7 @@ class ReferenceDataset(object):
             self.encode_blacklist_bedfile = "/data/reddylab/Reference_Data/ENCODE/mm9.blacklist.bed"
             self.genome_effective_size = "mm"
             self.annotation_file = "/data/reddylab/Reference_Data/Gencode/vM1/gencode.vM1.annotation.gtf"
-            self.rsem_rootname = "/data/reddylab/Reference_Data/Genomes/mm9/RSEM/RSEM_genome"
+            self.rsem_dir = "/data/reddylab/Reference_Data/Genomes/mm9/RSEM/RSEM_genome"
             self.genome_fasta_files = ["/data/reddylab/Reference_Data/Genomes/mm9/mm9.fa"]
         elif _genome == 'danrer10' or _genome == 'grcz10':
             self.bowtie_genome_ref_first_index = "/data/reddylab/Reference_Data/Genomes/danRer10/bowtie/danRer10.1.ebwt"
@@ -62,7 +62,7 @@ class ReferenceDataset(object):
             self.encode_blacklist_bedfile = None
             self.genome_effective_size = "1.04e9"
             self.annotation_file = "/data/reddylab/Reference_Data/Genomes/danRer10/Danio_rerio.GRCz10.88.chrom_cleaned.gtf"
-            self.rsem_rootname = "/data/reddylab/Reference_Data/Genomes/danRer10/RSEM/RSEM_genome"
+            self.rsem_dir = "/data/reddylab/Reference_Data/Genomes/danRer10/RSEM/RSEM_genome"
             self.genome_fasta_files = ["/data/reddylab/Reference_Data/Genomes/danRer10/danRer10.fa"]
         else:
             raise Exception("Genome %s not recognized" % genome)

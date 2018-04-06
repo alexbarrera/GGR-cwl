@@ -40,7 +40,7 @@ class MetadataParser(object):
         self.genome_sizes_file = args.genome_sizes_file
         self.genome_fasta_files = args.genome_fasta_files
         self.annotation_file = args.annotation_file
-        self.rsem_rootname = args.rsem_rootname
+        self.rsem_dir = args.rsem_dir
         self.encode_blacklist_bedfile = args.encode_blacklist_bedfile
         self.trimmomatic_jar = args.trimmomatic_jar
         self.picard_jar = args.picard_jar
@@ -295,8 +295,8 @@ def main():
     parser.add_argument('--star-genome-dir', help='[RNA-seq only] Directory containing the STAR Genome files (indices).')
     parser.add_argument('--annotation-file', help='[RNA-seq only] Gene annotation GTF file')
     parser.add_argument('--genome-fasta-files', nargs="*", help='[RNA-seq only] Genome FASTA file')
-    parser.add_argument('--rsem-rootname',
-                        help='[RNA-seq only] RSEM reference/index rootname (common path to each RSEM index file)')
+    parser.add_argument('--rsem-dir',
+                        help='[RNA-seq only] RSEM reference/index directory (all index files should be included in this directory)')
     parser.add_argument('--as-narrowPeak', default=consts.as_narrowPeak,
                         help='AutoSQL file defining non-standard fields for narrowPeak files '
                              '(formats available in https://github.com/ucscGenomeBrowser/kent/tree/master/src/hg/lib/encode)')
