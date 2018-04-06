@@ -77,12 +77,8 @@ outputs:
      doc: Trimmed fastq files for paired read 1
      type: File[]
      outputSource: trim/output_data_fastq_read1_trimmed_files
-   star_aligned_unsorted_file:
-     doc: STAR mapped unsorted file.
-     type: File[]
-     outputSource: map/star_aligned_unsorted_file
    star_aligned_sorted_file:
-     doc: STAR mapped unsorted file.
+     doc: STAR mapped sorted file.
      type: File[]
      outputSource: map/star_aligned_sorted_file
    star1_stat_files:
@@ -136,7 +132,7 @@ outputs:
        type: array
      outputSource: map/star2_stat_files
    transcriptome_star_aligned_file:
-     doc: STAR mapped unsorted file.
+     doc: STAR mapped to transcriptome sorted file.
      type: File[]
      outputSource: map/transcriptome_star_aligned_file
    transcriptome_star_stat_files:
@@ -204,7 +200,6 @@ steps:
        sjdb_name: sjdb_name
      run: 03-map-se.cwl
      out:
-     - star_aligned_unsorted_file
      - star_aligned_sorted_file
      - star2_stat_files
      - star2_readspergene_file
