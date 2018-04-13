@@ -7,13 +7,13 @@
   - class: SubworkflowFeatureRequirement
   - class: StepInputExpressionRequirement
  inputs:
-    input_treatment_fastq_files:
+    input_treatment_fastq_read1_files:
       doc: Input treatment fastq paired-end read 1 files
       type: File[]
     input_treatment_fastq_read2_files:
       doc: Input treatment fastq paired-end read 2 files
       type: File[]
-    input_control_fastq_files:
+    input_control_fastq_read1_files:
       doc: Input control fastq paired-end read 1 files
       type: File[]
     input_control_fastq_read2_files:

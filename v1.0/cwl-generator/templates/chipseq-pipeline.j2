@@ -9,7 +9,7 @@
  inputs:
 {% for sample_type in sample_types %}
     {% if read_type == "pe" %}
-    input_{{ sample_type }}_fastq_files:
+    input_{{ sample_type }}_fastq_read1_files:
       doc: Input {{ sample_type }} fastq paired-end read 1 files
       type: File[]
     input_{{ sample_type }}_fastq_read2_files:
