@@ -489,6 +489,30 @@ inputs:
        position: 1
        prefix: --very-sensitive
      doc: '      For --end-to-end: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50; For --local: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50'
+   very-fast-local:
+     type: boolean?
+     inputBinding:
+       position: 1
+       prefix: --very-fast-local
+     doc: '      For --end-to-end: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50; For --local: -D 5 -R 1 -N 0 -L 25 -i S,1,2.00'
+   fast-local:
+     type: boolean?
+     inputBinding:
+       position: 1
+       prefix: --fast-local
+     doc: '      For --end-to-end: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50; For --local: -D 10 -R 2 -N 0 -L 22 -i S,1,1.75'
+   sensitive-local:
+     type: boolean?
+     inputBinding:
+       position: 1
+       prefix: --sensitive-local
+     doc: '      For --end-to-end: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15; For --local: -D 15 -R 2 -N 0 -L 20 -i S,1,0.75 (default)'
+   very-sensitive-local:
+     type: boolean?
+     inputBinding:
+       position: 1
+       prefix: --very-sensitive-local
+     doc: '      For --end-to-end: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50; For --local: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50'
    qseq:
      type: boolean?
      inputBinding:
