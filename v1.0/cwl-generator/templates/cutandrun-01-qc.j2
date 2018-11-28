@@ -24,9 +24,10 @@ inputs:
 {#   default_adapters_file:#}
 {#     doc: Adapters file#}
 {#     type: File#}
-{#   nthreads:#}
+   nthreads:
      doc: Number of threads.
      type: int
+     default: 1
 {% set read_pairs = ["_read1", "_read2"] if read_type == "pe" else [""] %}
 steps:
 {% for read_pair in read_pairs %}

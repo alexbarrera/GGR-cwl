@@ -54,6 +54,35 @@ def get_cwl_name(template_name, conf_obj):
         if conf_obj['blacklist_removal']:
             suf_list.append('blacklist-removal')
         return "03-map-%s" % '-'.join(suf_list)
+
+    if 'cutandrun-pipeline' == template_name:
+        suf_list = [conf_obj['read_type']]
+        if conf_obj['dedup']:
+            suf_list.append('dedup')
+        if conf_obj['spike_in']:
+            if conf_obj['spike_in_blacklist']:
+                suf_list.append('spike-in-blacklisted')
+            else:
+                suf_list.append('spike-in')
+        if conf_obj['blacklist_removal']:
+            suf_list.append('blacklist-removal')
+        return "pipeline-%s" % '-'.join(suf_list)
+    if 'cutandrun-01-qc' == template_name:
+        suf_list = [conf_obj['read_type']]
+        return "01-qc-%s" % '-'.join(suf_list)
+    if 'cutandrun-02-map' == template_name:
+        suf_list = [conf_obj['read_type']]
+        if conf_obj['dedup']:
+            suf_list.append('dedup')
+        if conf_obj['spike_in']:
+            if conf_obj['spike_in_blacklist']:
+                suf_list.append('spike-in-blacklisted')
+            else:
+                suf_list.append('spike-in')
+        if conf_obj['blacklist_removal']:
+            suf_list.append('blacklist-removal')
+        return "02-map-%s" % '-'.join(suf_list)
+
     if template_name in ['atacseq-04-peakcall', 'atacseq-02-trim', 'atacseq-01-qc']:
         return "%s-%s" % (template_name.replace('atacseq-', ''), conf_obj['read_type'])
 

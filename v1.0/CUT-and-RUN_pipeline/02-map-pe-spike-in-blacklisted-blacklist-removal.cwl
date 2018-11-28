@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
 cwlVersion: v1.0
-doc: 'CUT-and-RUN 02 mapping - reads: {{read_type|upper}}{% if dedup %} - removing duplicates{% endif %}{% if blacklist_removal %} - blacklist removal{% endif %}{% if spike_in %} - spike in{% endif %}{% if spike_in_blacklist %} - spike in blacklist{% endif %}'
+doc: 'CUT-and-RUN 02 mapping - reads: PE - blacklist removal - spike in - spike in blacklist'
 requirements:
  - class: ScatterFeatureRequirement
  - class: SubworkflowFeatureRequirement
@@ -9,18 +9,12 @@ requirements:
  - class: InlineJavascriptRequirement
  - class: MultipleInputFeatureRequirement
 inputs:
-{% if read_type == "pe" %}
    input_fastq_read1_files:
      doc: Input fastq paired-end read 1 files
      type: File[]
    input_fastq_read2_files:
      doc: Input fastq paired-end read 2 files
      type: File[]
-{% else %}
-   input_fastq_files:
-     doc: Input fastq files
-     type: File[]
-{% endif %}
    picard_jar_path:
      default: /usr/picard/picard.jar
      doc: Picard Java jar file
@@ -28,12 +22,9 @@ inputs:
    picard_java_opts:
      doc: JVM arguments should be a quoted, space separated list (e.g. "-Xms128m -Xmx512m")
      type: string?
-{% if blacklist_removal %}
    ENCODE_blacklist_bedfile:
      doc: Bedfile containing ENCODE consensus blacklist regions to be excluded.
      type: File
-{% endif %}
-{% if spike_in %}
    spike_in_genome_ref_first_index_file:
      doc: Bowtie first index file for spike-in reference genome (e.g. *.1.bt2). The rest of the files should be in the same folder.
      type: File
@@ -43,12 +34,9 @@ inputs:
        - ^^.4.bt2
        - ^^.rev.1.bt2
        - ^^.rev.2.bt2
-    {%  if spike_in_blacklist %}
    spike_in_blacklist_bedfile:
      doc: Bedfile containing blacklist regions to be excluded from spike-in alignments.
      type: File
-    {% endif %}
-{% endif %}
    genome_sizes_file:
      doc: Genome sizes tab-delimited file (used in samtools)
      type: File
@@ -68,7 +56,7 @@ steps:
    extract_basename_1:
      run: ../utils/extract-basename.cwl
      in:
-       input_file: input_fastq{% if read_type == "pe" %}_read1{% endif %}_files
+       input_file: input_fastq_read1_files
      scatter: input_file
      out:
      - output_basename
@@ -83,20 +71,12 @@ steps:
      run: ../map/bowtie2.cwl
      scatterMethod: dotproduct
      scatter:
-{% if read_type == "pe" %}
      - input_fastq_read1_file
      - input_fastq_read2_file
-{% else %}
-     - input_fastq_file
-{% endif %}
      - output_filename
      in:
-{% if read_type == "pe" %}
        input_fastq_read1_file: input_fastq_read1_files
        input_fastq_read2_file: input_fastq_read2_files
-{% else %}
-       input_fastq_file: input_fastq_files
-{% endif %}
        output_filename: extract_basename_2/output_path
        local:
          valueFrom: ${return true}
@@ -154,31 +134,10 @@ steps:
      in:
        input_sorted_file: sort_bams/sorted_file
        output_file_basename: extract_basename_2/output_path
-{% if read_type == 'pe' %}
        pe:
          valueFrom: ${return true}
-{% endif %}
      out:
      - output_file
-{#   preseq-lc-extrap:#}
-{#     run: ../map/preseq-lc_extrap.cwl#}
-{#     scatter:#}
-{#     - input_sorted_file#}
-{#     - output_file_basename#}
-{#     scatterMethod: dotproduct#}
-{#     in:#}
-{#       input_sorted_file: filtered2sorted/sorted_file#}
-{#       output_file_basename: extract_basename_2/output_path#}
-{#       s:#}
-{#         valueFrom: ${return 100000}#}
-{#       D:#}
-{#         valueFrom: ${return true}#}
-{#{% if read_type == 'pe' %}#}
-{#       pe:#}
-{#         valueFrom: ${return true}#}
-{#{% endif %}#}
-{#     out:#}
-{#     - output_file#}
    execute_pcr_bottleneck_coef:
      in:
        input_bam_files: sort_bams/sorted_file
@@ -187,48 +146,6 @@ steps:
      run: ../map/pcr-bottleneck-coef.cwl
      out:
      - pbc_file
-{% if remove_blacklist %}
-   remove_encode_blacklist:
-     run: ../map/bedtools-intersect.cwl
-     scatterMethod: dotproduct
-     scatter:
-     - a
-     - output_basename_file
-     in:
-       a: index_sorted_bams/indexed_file
-       b: ENCODE_blacklist_bedfile
-       output_basename_file: extract_basename_2/output_path
-       v:
-         valueFrom: ${return true}
-     out:
-     - file_wo_blacklist_regions
-
-   sort_masked_bams:
-     run: ../map/samtools-sort.cwl
-     scatter:
-     - input_file
-     in:
-       nthreads: nthreads
-       input_file: remove_encode_blacklist/file_wo_blacklist_regions
-     out:
-     - sorted_file
-   index_masked_bams:
-     run: ../map/samtools-index.cwl
-     scatter:
-     - input_file
-     in:
-       input_file: sort_masked_bams/sorted_file
-     out:
-     - indexed_file
-
-   masked_file_basename:
-     run: ../utils/extract-basename.cwl
-     scatter: input_file
-     in:
-       input_file: remove_encode_blacklist/file_wo_blacklist_regions
-     out:
-     - output_basename
-{% endif %}
    mark_duplicates:
      run: ../map/picard-MarkDuplicates.cwl
      scatterMethod: dotproduct
@@ -238,12 +155,10 @@ steps:
      in:
        java_opts: picard_java_opts
        picard_jar_path: picard_jar_path
-       output_filename: {% if remove_blacklist %}masked_file_basename/output_basename{% else %}extract_basename_2/output_path{% endif %}
-       input_file: {% if remove_blacklist %}index_masked_bams/indexed_file{% else %}index_sorted_bams/indexed_file{% endif %}
+       output_filename: extract_basename_2/output_path
+       input_file: index_sorted_bams/indexed_file
        output_suffix:
          valueFrom: bam
-{#        remove_duplicates:#}
-{#          valueFrom: ${return true}#}
      out:
      - output_metrics_file
      - output_dedup_bam_file
@@ -266,61 +181,16 @@ steps:
        input_file: sort_dups_marked_bams/sorted_file
      out:
      - indexed_file
-{% if dedup %}
-   remove_duplicates:
-     run: ../map/samtools-view.cwl
-     scatter:
-     - input_file
-     in:
-       input_file: index_dups_marked_bams/indexed_file
-       F:
-         valueFrom: ${return 1024}
-       suffix:
-         valueFrom: .dedup.bam
-       b:
-         valueFrom: ${return true}
-       outfile_name:
-         valueFrom: ${return inputs.input_file.basename.replace('dups_marked', 'dedup')}
-     out:
-     - outfile
-   sort_dedup_bams:
-     run: ../map/samtools-sort.cwl
-     scatter:
-     - input_file
-     in:
-       nthreads: nthreads
-       input_file: remove_duplicates/outfile
-     out:
-     - sorted_file
-   index_dedup_bams:
-     run: ../map/samtools-index.cwl
-     scatter:
-     - input_file
-     in:
-       input_file: sort_dedup_bams/sorted_file
-     out:
-     - indexed_file
-{% endif %}
-{#Spike-in branch of the mapping step#}
-{% if spike_in %}
    bowtie2_spike_in:
      run: ../map/bowtie2.cwl
      scatterMethod: dotproduct
      scatter:
-{% if read_type == "pe" %}
      - input_fastq_read1_file
      - input_fastq_read2_file
-{% else %}
-     - input_fastq_file
-{% endif %}
      - output_filename
      in:
-{% if read_type == "pe" %}
        input_fastq_read1_file: input_fastq_read1_files
        input_fastq_read2_file: input_fastq_read2_files
-{% else %}
-       input_fastq_file: input_fastq_files
-{% endif %}
        output_filename:
          source: extract_basename_2/output_path
          valueFrom: ${return  self + '.spike_in'}
@@ -375,8 +245,6 @@ steps:
        input_file: sort_bams_spike_in/sorted_file
      out:
      - indexed_file
-{#Extract fragments in BED format from BAM files    #}
-{% if read_type == "pe" %}
    spike_in_extract_fragments_bam2bed:
      run: ../map/bedtools-bamtobed.cwl
      scatter: bam
@@ -384,8 +252,6 @@ steps:
        bam: index_sorted_bams_spike_in/indexed_file
      out:
        - output_bedfile
-{% endif %}
-{% if spike_in_blacklist %}
    spike_in_blacklist:
      run: ../map/bedtools-intersect.cwl
      scatterMethod: dotproduct
@@ -424,18 +290,13 @@ steps:
        input_file: spike_in_blacklist/file_wo_blacklist_regions
      out:
      - output_basename
-{% endif %}
-{% endif %}
-{#Extract fragments in BED format from BAM files    #}
-{% if read_type == "pe" %}
    extract_fragments_bam2bed:
      run: ../map/bedtools-bamtobed.cwl
      scatter: bam
      in:
-       bam: {% if dedup %}index_dedup_bams{% elif remove_blacklist %}index_masked_bams{% else %}index_sorted_bams{% endif %}/indexed_file
+       bam: index_sorted_bams/indexed_file
      out:
        - output_bedfile
-{% endif %}
    mapped_reads_count:
      run: ../map/bowtie2-log-read-counts.cwl
      scatterMethod: dotproduct
@@ -462,7 +323,7 @@ steps:
      in:
        output_suffix:
          valueFrom: .mapped_and_filtered.read_count.txt
-       input_bam_file: {% if dedup %}index_dedup_bams{% elif remove_blacklist %}index_masked_bams{% else %}index_sorted_bams{% endif %}/indexed_file
+       input_bam_file: index_sorted_bams/indexed_file
      out:
      - output_read_count
 outputs:
@@ -475,9 +336,9 @@ outputs:
      type: File[]
      outputSource: mapped_reads_count/percent_map
    output_data_sorted_dedup_bam_files:
-     doc: BAM files {% if dedup %}without duplicate reads{% else %}with duplicates marked{% endif %}, sorted and indexed.
+     doc: BAM files with duplicates marked, sorted and indexed.
      type: File[]
-     outputSource: {% if dedup %}index_dedup_bams{% elif remove_blacklist %}index_masked_bams{% else %}index_dups_marked_bams{% endif %}/indexed_file
+     outputSource: index_dups_marked_bams/indexed_file
    output_picard_mark_duplicates_files:
      doc: Picard MarkDuplicates metrics files.
      type: File[]
@@ -498,29 +359,19 @@ outputs:
      doc: Preseq c_curve output files.
      type: File[]
      outputSource: preseq-c-curve/output_file
-{% if read_type == "pe" %}
    output_extract_fragments_bam2bed:
      doc: Fragments in BED format
      type: File[]
      outputSource: extract_fragments_bam2bed/output_bedfile
-{% endif %}
-{% if spike_in %}
    output_bams_spike_in:
      doc: BAM files for the spike-in, sorted and indexed.
      type: File[]
-     outputSource: {% if spike_in_blacklist %}index_masked_bams_spike_in{% else %}index_sorted_bams_spike_in{% endif %}/indexed_file
+     outputSource: index_masked_bams_spike_in/indexed_file
    output_spike_in_bowtie_log:
      doc: Bowtie2 log for spike-in
      type: File[]
      outputSource: bowtie2_spike_in/output_bowtie_log
-{% if read_type == "pe" %}
    output_extract_fragments_bam2bed_spike_in:
      doc: Spike-in fragments in BED format
      type: File[]
      outputSource: spike_in_extract_fragments_bam2bed/output_bedfile
-{% endif %}
-{% endif %}
-{#   output_preseq_lc_extrap_files:#}
-{#     doc: Preseq lc_extrap output files.#}
-{#     type: File[]#}
-{#     outputSource: preseq-lc-extrap/output_file#}

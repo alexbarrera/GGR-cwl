@@ -1,0 +1,73 @@
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: yes
+  dedup: yes
+  blacklist_removal: yes
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: yes
+  dedup: no
+  blacklist_removal: yes
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: no
+  dedup: yes
+  blacklist_removal: yes
+-
+  read_type: pe
+  spike_in: no
+  spike_in_blacklist: no
+  dedup: yes
+  blacklist_removal: yes
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: no
+  dedup: no
+  blacklist_removal: yes
+-
+  read_type: pe
+  spike_in: no
+  spike_in_blacklist: no
+  dedup: no
+  blacklist_removal: yes
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: yes
+  dedup: yes
+  blacklist_removal: no
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: yes
+  dedup: no
+  blacklist_removal: no
+
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: no
+  dedup: yes
+  blacklist_removal: no
+-
+  read_type: pe
+  spike_in: no
+  spike_in_blacklist: no
+  dedup: yes
+  blacklist_removal: no
+-
+  read_type: pe
+  spike_in: yes
+  spike_in_blacklist: no
+  dedup: no
+  blacklist_removal: no
+-
+  read_type: pe
+  spike_in: no
+  spike_in_blacklist: no
+  dedup: no
+  blacklist_removal: no
